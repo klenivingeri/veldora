@@ -146,7 +146,7 @@ const toggleFullScreen = () => {
 
 const serializaItem = (item) => {
   const num = item.quant.toString().padStart(2, "0");
-  const text = `${num} - ${item.label}`;
+  const text = `${num} - ${item.name}`;
   return text;
 };
 
@@ -243,6 +243,13 @@ export default function Home() {
     },
     []
   );
+
+  useEffect(() => {
+    getListItems().then((response) => {
+
+      setListaSelecaoItems(response)
+    });
+  }, []);
   console.log(value)
   return !exibirListaCompleta ? (
     <main className="flex h-screen flex-col bg-gray-100">
