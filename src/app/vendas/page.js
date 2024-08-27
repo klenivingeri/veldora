@@ -123,9 +123,7 @@ const itensAdicionadosALista = [
     price: 19.36,
     quant: 1,
   },
-]
-
-
+];
 
 const total = (items) => {
   const totalPrice = items.reduce((acc, current) => acc + current.price, 0);
@@ -193,8 +191,8 @@ const handleAdicionaItem = async (
     console.log(resp);
   });
   setIsLoadingAddItem(false);
-  setValue("")
-  setQuantidade(0)
+  setValue("");
+  setQuantidade(0);
 
   setListItens((prevList) => {
     return [...prevList, obj];
@@ -226,7 +224,7 @@ export default function Home() {
 
   const textFieldRef = useRef(null);
   const handleKeyboard = () => {
-    console.log(isTextKeyboard)
+    console.log(isTextKeyboard);
 
     setTextKeyboard(!isTextKeyboard);
 
@@ -234,23 +232,14 @@ export default function Home() {
       textFieldRef.current.focus();
     }
   };
-  useEffect(
-    () => async () => {
-      {
-        const items = await getListItems();
-        setListaSelecaoItems(items);
-      }
-    },
-    []
-  );
 
   useEffect(() => {
     getListItems().then((response) => {
-
-      setListaSelecaoItems(response)
+      setListaSelecaoItems(response);
     });
   }, []);
-  console.log(value)
+
+
   return !exibirListaCompleta ? (
     <main className="flex h-screen flex-col bg-gray-100">
       <div className="flex flex-col p-2 gap-4">
@@ -285,11 +274,12 @@ export default function Home() {
               value={value ? value : text}
               disablePortal
               onChange={(event, newValue) => {
+                
                 setValue(newValue);
                 setQuantidade(1);
                 setInputDetails("");
                 setDescription(false);
-                setText("")
+                setText("");
               }}
               disabled={!listaSelecaoItems.length}
               id="combo-box-demo"
@@ -323,8 +313,7 @@ export default function Home() {
               variant="contained"
               onClick={() => handleKeyboard()}
             >
-
-              {isTextKeyboard  ? "Text" : "Num"}
+              {isTextKeyboard ? "Text" : "Num"}
             </Button>
           </div>
         </div>
@@ -333,31 +322,45 @@ export default function Home() {
           setQuantidade={setQuantidade}
           quantidade={quantidade}
         />
-        <FormControlLabel
-          control={<Switch />}
-          onChange={() => setDescription(!description)}
-          label="Adicionar um comentário"
-        />
-        {description && (
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Click aqui para adicione um comentário aqui"
-            value={inputDetails}
-            onChange={(event) => {
-              setInputDetails(event.target.value);
-            }}
-            InputProps={{
-              endAdornment: !!inputDetails.length && (
-                <IconButton>
-                  <CloseIcon
-                    sx={{ color: "grey" }}
-                    onClick={() => setInputDetails("")}
-                  />
-                </IconButton>
-              ),
-            }}
-          />
-        )}
+        <div className="flex items-center">
+          <div className={`ml-2 ${!description ? 'w-full' : '' }`}>
+            <FormControlLabel
+              sx={{
+                height: "56px",
+                marginRight:'2px'
+              }}
+              control={<Switch />}
+              onChange={() => setDescription(!description)}
+              label={!description ? "Adicionar um comentário" : ''}
+            />
+          </div>
+          <div className="flex w-full">
+            {description && (
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Click aqui para adicione um comentário aqui"
+                value={inputDetails}
+                onChange={(event) => {
+                  setInputDetails(event.target.value);
+                }}
+                sx={{
+                  width: "100%",
+                }}
+                InputProps={{
+                  endAdornment: !!inputDetails.length && (
+                    <IconButton>
+                      <CloseIcon
+                        sx={{ color: "grey" }}
+                        onClick={() => setInputDetails("")}
+                      />
+                    </IconButton>
+                  ),
+                }}
+              />
+            )}
+          </div>
+        </div>
+
         <div className="flex flex-1 h-20">
           <Button
             sx={{
