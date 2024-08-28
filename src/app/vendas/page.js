@@ -10,7 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
+import KeyboardIcon from '@mui/icons-material/Keyboard';
+import PinIcon from '@mui/icons-material/Pin';
 import { Quantidade } from "../components/organismo/Quantidade";
 import { testServer, getListItems } from "../server";
 
@@ -242,7 +243,7 @@ export default function Home() {
 
   return !exibirListaCompleta ? (
     <main className="flex h-screen flex-col bg-gray-100">
-      <div className="flex flex-col p-2 gap-4">
+      <div className="flex w-full flex-col p-2 gap-4">
         <div className="grid grid-cols-7 gap-4">
           <div className="col-span-2">
             <p className="text-xs">
@@ -268,15 +269,19 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className=" grid grid-cols-10 gap-4">
-          <div className="col-span-8">
+        <div className="flex w-full gap-4">
+          <div className="w-full">
             <Autocomplete
               value={value ? value : text}
               disablePortal
               onChange={(event, newValue) => {
-                
+                console.log(newValue)
+                if(newValue == null){
+                  setQuantidade(0);
+                } else {
+                  setQuantidade(1);
+                }
                 setValue(newValue);
-                setQuantidade(1);
                 setInputDetails("");
                 setDescription(false);
                 setText("");
@@ -313,7 +318,8 @@ export default function Home() {
               variant="contained"
               onClick={() => handleKeyboard()}
             >
-              {isTextKeyboard ? "Text" : "Num"}
+              {isTextKeyboard ? <KeyboardIcon /> : <PinIcon />}
+               
             </Button>
           </div>
         </div>
@@ -322,19 +328,21 @@ export default function Home() {
           setQuantidade={setQuantidade}
           quantidade={quantidade}
         />
-        <div className="flex items-center">
+        
+        <div className="flex w-full items-center">
           <div className={`ml-2 ${!description ? 'w-full' : '' }`}>
             <FormControlLabel
               sx={{
                 height: "56px",
-                marginRight:'2px'
+                marginRight:'2px',
+                width: '100%'
               }}
               control={<Switch />}
               onChange={() => setDescription(!description)}
               label={!description ? "Adicionar um comentário" : ''}
             />
           </div>
-          <div className="flex w-full">
+          <div className={`flex ${!description ? '' : 'w-full' }`}>
             {description && (
               <TextField
                 id="outlined-multiline-flexible"
