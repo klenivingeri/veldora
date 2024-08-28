@@ -13,113 +13,114 @@ import KeyboardIcon from "@mui/icons-material/Keyboard";
 import PinIcon from "@mui/icons-material/Pin";
 import { Quantidade } from "../components/organismo/Quantidade";
 import { testServer, getListItems } from "../server";
+import QRCode from "react-qr-code";
 
 const itensAdicionadosALista = [
   {
     id: "1",
-    label: "City of God",
+    name: "City of God",
     price: 20,
     quant: 1,
   },
   {
     id: "2",
-    label: "Se7en",
+    name: "Se7en",
     price: 1.5,
     quant: 1,
   },
   {
     id: "3",
-    label: "The Silence of the Lambs",
+    name: "The Silence of the Lambs",
     price: 11,
     quant: 1,
   },
   {
     id: "4",
-    label: "It's a Wonderful Life",
+    name: "It's a Wonderful Life",
     price: 4.6,
     quant: 1,
   },
   {
     id: "5",
-    label: "Life Is Beautiful",
+    name: "Life Is Beautiful",
     price: 9.7,
     quant: 1,
   },
   {
     id: "6",
-    label: "The Usual Suspects",
+    name: "The Usual Suspects",
     price: 95,
     quant: 1,
   },
   {
     id: "7",
-    label: "Léon: The Professional",
+    name: "Léon: The Professional",
     price: 199,
     quant: 1,
   },
   {
     id: "8",
-    label: "Spirited Away",
+    name: "Spirited Away",
     price: 1,
     quant: 1,
   },
   {
     id: "9",
-    label: "Saving Private Ryan",
+    name: "Saving Private Ryan",
     price: 18,
     quant: 1,
   },
   {
     id: "10",
-    label: "Once Upon a Time in the West Once Upon a Time in the West",
+    name: "Once Upon a Time in the West Once Upon a Time in the West",
     price: 6.8,
     quant: 1,
   },
   {
     id: "11",
-    label: "American History X",
+    name: "American History X",
     price: 98,
     quant: 1,
   },
   {
     id: "12",
-    label: "Interstellar",
+    name: "Interstellar",
     price: 14,
     quant: 1,
   },
   {
     id: "13",
-    label: "Casablanca",
+    name: "Casablanca",
     price: 12,
     quant: 1,
   },
   {
     id: "14",
-    label: "City Lights",
+    name: "City Lights",
     price: 11,
     quant: 1,
   },
   {
     id: "15",
-    label: "Psycho",
+    name: "Psycho",
     price: 19.6,
     quant: 1,
   },
   {
     id: "16",
-    label: "The Green Mile",
+    name: "The Green Mile",
     price: 199,
     quant: 1,
   },
   {
     id: "17",
-    label: "The Intouchables",
+    name: "The Intouchables",
     price: 20.11,
     quant: 1,
   },
   {
     id: "18",
-    label: "Modern Times",
+    name: "Modern Times",
     price: 19.36,
     quant: 1,
   },
@@ -143,6 +144,7 @@ const toggleFullScreen = () => {
 };
 
 const serializaItem = (item) => {
+  console.log(item);
   const num = item?.quant.toString().padStart(2, "0");
   const text = `${num} - ${item?.name}`;
   return text;
@@ -190,6 +192,7 @@ const handleAdicionaItem = async (
   await testServer("testando").then((resp) => {
     console.log(resp);
   });
+
   setIsLoadingAddItem(false);
   setValue("");
   setQuantidade(0);
@@ -202,8 +205,8 @@ const handleAdicionaItem = async (
 
 const Loading = () => {
   return (
-    <div class="flex justify-center items-center h-4">
-      <div class="w-4 h-4 border-2 border-gray-100 border-solid border-t-transparent rounded-full animate-spin"></div>
+    <div className="flex justify-center items-center h-4">
+      <div className="w-4 h-4 border-2 border-gray-100 border-solid border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 };
@@ -215,8 +218,11 @@ export default function Home() {
   const [inputDetails, setInputDetails] = useState("");
   const [quantidade, setQuantidade] = useState(0);
   const [exibirListaCompleta, setExibirListaCompleta] = useState(false);
-  const [listDeItensAdicionados, setListDeItensAdicionados] = useState([]);
+  const [listDeItensAdicionados, setListDeItensAdicionados] = useState(
+    itensAdicionadosALista
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalQRCodeOpen, setIsModalQRCodeOpen] = useState(false);
   const [isLoadingAddItem, setIsLoadingAddItem] = useState(false);
   const [description, setDescription] = useState(false);
   const [isTextKeyboard, setTextKeyboard] = useState(false);
@@ -260,11 +266,17 @@ export default function Home() {
             </p>
             <div className="flex h-20 border-solid rounded border-2 bg-slate-950 border-black shadow-lg ">
               <div className="flex w-full flex-col pl-2 justify-end ">
-                {listDeItensAdicionados.length 
-                 ? listDeItensAdicionados.slice(-3).map((item) => (
-                  <p className="w-full truncate text-white ">{serializaItem(item)}</p>
-                ))
-                : <p className="w-full truncate text-white ">...</p> }
+                {listDeItensAdicionados.length ? (
+                  listDeItensAdicionados
+                    .slice(-3)
+                    .map((item) => (
+                      <p className="w-full truncate text-white ">
+                        {serializaItem(item)}
+                      </p>
+                    ))
+                ) : (
+                  <p className="w-full truncate text-white ">...</p>
+                )}
               </div>
             </div>
           </div>
@@ -275,7 +287,6 @@ export default function Home() {
               value={value ? value : text}
               disablePortal
               onChange={(event, newValue) => {
-
                 if (newValue == null) {
                   setQuantidade(0);
                 } else {
@@ -370,10 +381,16 @@ export default function Home() {
 
         <div className="flex flex-1 h-20">
           <button
-            className={`px-4 h-10 w-full py-2 rounded text-white ${isLoadingAddItem && 'cursor-not-allowed'} 
-              ${!(value && quantidade) ? 'bg-gray-400 cursor-not-allowed ' : 'bg-slate-950 border-inherit shadow-lg'}`}
-              disabled={!(value && quantidade)}
-              onClick={() =>
+            className={`px-4 h-10 w-full py-2 rounded text-white ${
+              isLoadingAddItem && "cursor-not-allowed"
+            } 
+              ${
+                !(value && quantidade)
+                  ? "bg-gray-400 cursor-not-allowed "
+                  : "bg-slate-950 border-inherit shadow-lg"
+              }`}
+            disabled={!(value && quantidade)}
+            onClick={() =>
               handleAdicionaItem(
                 value,
                 setValue,
@@ -390,7 +407,7 @@ export default function Home() {
               )
             }
           >
-            {isLoadingAddItem ? <Loading /> : "Adicionar Item"}
+            {isLoadingAddItem ? <Loading /> : "ADICIONAR ITEM"}
           </button>
         </div>
       </div>
@@ -398,17 +415,17 @@ export default function Home() {
       {isModalOpen && (
         <div
           id="modal"
-          class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
         >
-          <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
-            <h2 class="text-xl font-semibold mb-4">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4">
               Item adicionado recentemente
             </h2>
-            <p class="mb-4">Tem certeza que deseja adicionar o item?</p>
-            <div class="flex justify-end gap-4">
+            <p className="mb-4">Tem certeza que deseja adicionar o item?</p>
+            <div className="flex justify-end gap-4">
               <button
                 onClick={() => setIsModalOpen(false)}
-                class="px-4 py-2 bg-red-500 text-white rounded"
+                className="px-4 py-2 bg-red-500 text-white rounded"
               >
                 Cancelar
               </button>
@@ -431,7 +448,7 @@ export default function Home() {
                     true
                   );
                 }}
-                class="px-4 py-2 bg-slate-950 border-inherit shadow-lg text-white rounded"
+                className="px-4 py-2 bg-slate-950 border-inherit shadow-lg text-white rounded"
               >
                 Confirmar
               </button>
@@ -464,27 +481,40 @@ export default function Home() {
             </div>
           </div>
           <div
-            className="col-span-5 pt-3"
+            className="col-span-3 pt-3"
             onClick={() => setExibirListaCompleta(true)}
           >
             <div className="flex h-20 border-solid rounded border-2 bg-gray-300">
               <div className="flex w-full flex-col p-2 justify-start">
                 <p className="text-xs">
-                  <strong>Informações da comanda</strong>
+                  <strong>Informações</strong>
                 </p>
                 <div className="text-xs pt-2">Aberta: 10:20</div>
                 <div className="text-xs">Atualização: 01:30</div>
               </div>
             </div>
           </div>
+          <div className="col-span-2 pt-3">
+            <div
+              className="flex justify-center items-center text-6xl h-20 border-solid"
+              onClick={() => setIsModalQRCodeOpen(!isModalQRCodeOpen)}
+            >
+              <QRCode
+                size={256}
+                style={{ height: "auto", maxWidth: "75px", width: "75px" }}
+                value={value}
+                viewBox={`0 0 256 256`}
+              />
+            </div>
+          </div>
         </div>
         <div className="grid grid-cols-8 mx-2 mt-3 gap-2 bg-gray-300 rounded border-b border-slate-400">
-          <div className="flex justify-center items-center col-span-1 h-10  border-r border-slate-400 ">
+          <div className="flex justify-center items-center col-span-1 h-10  border-slate-400 ">
             <strong>
               <p>Qtd</p>
             </strong>
           </div>
-          <div className="flex items-center col-span-5 border-r border-slate-400">
+          <div className="flex items-center col-span-5 border-l border-slate-400">
             <strong>
               <p>Descrição</p>
             </strong>
@@ -528,6 +558,32 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {isModalQRCodeOpen && (
+        <div
+          id="modal"
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div className="bg-white rounded-lg shadow-lg  max-w-sm w-full">
+            <div
+              className="flex  justify-end p-3"
+              onClick={() => setIsModalQRCodeOpen(!isModalQRCodeOpen)}
+            >
+              <div className=" rounded-lg">
+              <CloseIcon />
+              </div>
+              
+            </div>
+            <div className="pl-6 pr-6 pb-6">
+              <QRCode
+                size={256}
+                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                value={`https://anotaai-eight.vercel.app/comanda/123e4567-e89b-12d3-a456-426655440000`}
+                viewBox={`0 0 256 256`}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

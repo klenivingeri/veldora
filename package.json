@@ -16,7 +16,8 @@
     "next": "14.2.6",
     "numeral": "^2.0.6",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-qr-code": "^2.0.15"
   },
   "devDependencies": {
     "postcss": "^8",

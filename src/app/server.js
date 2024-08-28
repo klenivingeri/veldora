@@ -27,3 +27,21 @@ export const getListItems = async (data) => {
     return []
   }
 }
+
+export const getComanda = async (params) => {
+  let resp;
+
+  try {
+    const host = process?.env?.HOST? process.env.HOST : 'https://anotaai-eight.vercel.app'
+
+    const response = await fetch(`${host}/api/comanda/${params}`);
+
+    resp = await response.json();
+
+    return  resp
+    
+  } catch (error) {
+    console.error('Erro ao buscar itens:', error);
+    return []
+  }
+}
