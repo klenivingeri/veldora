@@ -10,8 +10,8 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import KeyboardIcon from '@mui/icons-material/Keyboard';
-import PinIcon from '@mui/icons-material/Pin';
+import KeyboardIcon from "@mui/icons-material/Keyboard";
+import PinIcon from "@mui/icons-material/Pin";
 import { Quantidade } from "../components/organismo/Quantidade";
 import { testServer, getListItems } from "../server";
 
@@ -203,7 +203,7 @@ const handleAdicionaItem = async (
 
 const Loading = () => {
   return (
-    <div class="flex justify-center items-center min-h-screen">
+    <div class="flex justify-center items-center h-4">
       <div class="w-4 h-4 border-2 border-gray-100 border-solid border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
@@ -240,9 +240,8 @@ export default function Home() {
     });
   }, []);
 
-
   return !exibirListaCompleta ? (
-    <main className="flex h-screen flex-col bg-gray-100">
+    <main className="flex h-screen flex-col bg-[url('https://img.freepik.com/vetores-gratis/fundo-branco-abstrato_23-2148844576.jpg?t=st=1724806453~exp=1724810053~hmac=27c5c135e50728ff0302d4be5b2fbbe5b09906d77d9b372da3294a2d75c4738c&w=996')]">
       <div className="flex w-full flex-col p-2 gap-4">
         <div className="grid grid-cols-7 gap-4">
           <div className="col-span-2">
@@ -260,10 +259,10 @@ export default function Home() {
             <p className="text-xs">
               <strong>Ultimos itens adicionados</strong>
             </p>
-            <div className="flex h-20 border-solid rounded border-2 bg-gray-300">
+            <div className="flex h-20 border-solid rounded border-2 bg-slate-950 border-inherit">
               <div className="flex w-full flex-col pl-2 justify-end">
                 {listDeItensAdicionados.slice(-3).map((item) => (
-                  <p className="w-full truncate">{serializaItem(item)}</p>
+                  <p className="w-full truncate text-white ">{serializaItem(item)}</p>
                 ))}
               </div>
             </div>
@@ -275,8 +274,8 @@ export default function Home() {
               value={value ? value : text}
               disablePortal
               onChange={(event, newValue) => {
-                console.log(newValue)
-                if(newValue == null){
+
+                if (newValue == null) {
                   setQuantidade(0);
                 } else {
                   setQuantidade(1);
@@ -289,10 +288,12 @@ export default function Home() {
               disabled={!listaSelecaoItems.length}
               id="combo-box-demo"
               options={listaSelecaoItems}
+              size="small"
               renderInput={(params) => (
                 <TextField
                   {...params}
                   inputRef={textFieldRef}
+                  size="small"
                   label={
                     !listaSelecaoItems.length
                       ? "Carregando items..."
@@ -310,17 +311,12 @@ export default function Home() {
             />
           </div>
           <div className="2">
-            <Button
-              sx={{
-                height: "56px",
-                width: "100%",
-              }}
-              variant="contained"
+            <button
+              className="px-4 h-10 w-full py-2 bg-slate-950 text-white rounded"
               onClick={() => handleKeyboard()}
             >
               {isTextKeyboard ? <KeyboardIcon /> : <PinIcon />}
-               
-            </Button>
+            </button>
           </div>
         </div>
         <Quantidade
@@ -328,25 +324,27 @@ export default function Home() {
           setQuantidade={setQuantidade}
           quantidade={quantidade}
         />
-        
+
         <div className="flex w-full items-center">
-          <div className={`ml-2 ${!description ? 'w-full' : '' }`}>
+          <div className={`ml-2 ${!description ? "w-full" : ""}`}>
             <FormControlLabel
               sx={{
-                height: "56px",
-                marginRight:'2px',
-                width: '100%'
+                height: "40px",
+                marginRight: "2px",
+                width: "100%",
               }}
+              size="small"
               control={<Switch />}
               onChange={() => setDescription(!description)}
-              label={!description ? "Adicionar um comentário" : ''}
+              label={!description ? "Adicionar um comentário" : ""}
             />
           </div>
-          <div className={`flex ${!description ? '' : 'w-full' }`}>
+          <div className={`flex ${!description ? "" : "w-full"}`}>
             {description && (
               <TextField
                 id="outlined-multiline-flexible"
-                label="Click aqui para adicione um comentário aqui"
+                label="Click aqui para adicione um comentário"
+                size="small"
                 value={inputDetails}
                 onChange={(event) => {
                   setInputDetails(event.target.value);
@@ -370,14 +368,9 @@ export default function Home() {
         </div>
 
         <div className="flex flex-1 h-20">
-          <Button
-            sx={{
-              height: "56px",
-              width: "100%",
-            }}
-            variant="contained"
-            disabled={!(value && quantidade)}
-            startIcon={isLoadingAddItem ? <Loading /> : null}
+          <button
+            className={`px-4 h-10 w-full py-2 rounded text-white 
+              ${!(value && quantidade) ? 'bg-gray-400 cursor-not-allowed' : 'bg-slate-950 border-inherit shadow-lg'}`}
             onClick={() =>
               handleAdicionaItem(
                 value,
@@ -395,8 +388,8 @@ export default function Home() {
               )
             }
           >
-            {isLoadingAddItem ? "" : "Adicionar Item"}
-          </Button>
+            {isLoadingAddItem ? <Loading /> : "Adicionar Item"}
+          </button>
         </div>
       </div>
       <a onClick={() => toggleFullScreen()}>full navegador</a>

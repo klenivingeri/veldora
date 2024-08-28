@@ -13,26 +13,25 @@ export const Quantidade = ({setQuantidade, quantidade, value}) => {
   return (
     <div className="grid grid-cols-3 ">
       <div className="flex justify-center">
-        <Button
-          sx={{ width: "100%"}}
+        <button
+          className={`px-4 h-10 w-full py-2 rounded text-white 
+            ${!(value && quantidade) ? 'bg-gray-400 cursor-not-allowed' : 'bg-slate-950 shadow-lg'}`}
           onClick={() => handleRemove()}
-          variant="contained"
-          disabled={!(value && quantidade) }
         >
           <RemoveIcon />
-        </Button>
+        </button>
       </div>
-      <div className="flex justify-center text-6xl">{quantidade}</div>
+      <div className="flex justify-center text-4xl">{quantidade}</div>
       <div className="flex justify-center">
-        <Button 
-          sx={{ 
-            width: "100%" }}
+        <button 
+          className={`px-4 h-10 w-full py-2 rounded text-white 
+            ${!value ? 'bg-gray-400 cursor-not-allowed' : 'bg-slate-950 shadow-lg'}`}
           onClick={() => handleAdd()}
           variant="contained"
           disabled={!value}
         >
           <AddIcon />
-        </Button>
+        </button>
       </div>
     </div>
   );
