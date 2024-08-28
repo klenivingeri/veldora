@@ -5,7 +5,7 @@ const wait = async (time = 500) => {
 };
 
 export const testServer = async (data) => {
-  await wait();
+  await wait(200);
   
   return data
 }

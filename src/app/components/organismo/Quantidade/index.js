@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 export const Quantidade = ({setQuantidade, quantidade, value}) => {

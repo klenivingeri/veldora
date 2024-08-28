@@ -4,7 +4,6 @@ import currency from "../utils/currency";
 import { useEffect, useState, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -144,8 +143,8 @@ const toggleFullScreen = () => {
 };
 
 const serializaItem = (item) => {
-  const num = item.quant.toString().padStart(2, "0");
-  const text = `${num} - ${item.name}`;
+  const num = item?.quant.toString().padStart(2, "0");
+  const text = `${num} - ${item?.name}`;
   return text;
 };
 
@@ -242,13 +241,13 @@ export default function Home() {
 
   return !exibirListaCompleta ? (
     <main className="flex h-screen flex-col bg-[url('https://img.freepik.com/vetores-gratis/fundo-branco-abstrato_23-2148844576.jpg?t=st=1724806453~exp=1724810053~hmac=27c5c135e50728ff0302d4be5b2fbbe5b09906d77d9b372da3294a2d75c4738c&w=996')]">
-      <div className="flex w-full flex-col p-2 gap-4">
-        <div className="grid grid-cols-7 gap-4">
-          <div className="col-span-2">
+      <div className="flex w-full flex-col p-2 gap-4 ">
+        <div className="grid grid-cols-7 gap-4 border border-gray-300 p-2 rounded">
+          <div className="col-span-2 ">
             <p className="text-xs">
               <strong>Comanda</strong>
             </p>
-            <div className="flex justify-center items-center text-6xl h-20 border-solid rounded border-2">
+            <div className="flex justify-center items-center text-6xl h-20 border-black border-solid rounded border-2 shadow-lg">
               75
             </div>
           </div>
@@ -259,11 +258,13 @@ export default function Home() {
             <p className="text-xs">
               <strong>Ultimos itens adicionados</strong>
             </p>
-            <div className="flex h-20 border-solid rounded border-2 bg-slate-950 border-inherit">
-              <div className="flex w-full flex-col pl-2 justify-end">
-                {listDeItensAdicionados.slice(-3).map((item) => (
+            <div className="flex h-20 border-solid rounded border-2 bg-slate-950 border-black shadow-lg ">
+              <div className="flex w-full flex-col pl-2 justify-end ">
+                {listDeItensAdicionados.length 
+                 ? listDeItensAdicionados.slice(-3).map((item) => (
                   <p className="w-full truncate text-white ">{serializaItem(item)}</p>
-                ))}
+                ))
+                : <p className="w-full truncate text-white ">...</p> }
               </div>
             </div>
           </div>
@@ -369,9 +370,10 @@ export default function Home() {
 
         <div className="flex flex-1 h-20">
           <button
-            className={`px-4 h-10 w-full py-2 rounded text-white 
-              ${!(value && quantidade) ? 'bg-gray-400 cursor-not-allowed' : 'bg-slate-950 border-inherit shadow-lg'}`}
-            onClick={() =>
+            className={`px-4 h-10 w-full py-2 rounded text-white ${isLoadingAddItem && 'cursor-not-allowed'} 
+              ${!(value && quantidade) ? 'bg-gray-400 cursor-not-allowed ' : 'bg-slate-950 border-inherit shadow-lg'}`}
+              disabled={!(value && quantidade)}
+              onClick={() =>
               handleAdicionaItem(
                 value,
                 setValue,
@@ -429,7 +431,7 @@ export default function Home() {
                     true
                   );
                 }}
-                class="px-4 py-2 bg-blue-500 text-white rounded"
+                class="px-4 py-2 bg-slate-950 border-inherit shadow-lg text-white rounded"
               >
                 Confirmar
               </button>
@@ -439,10 +441,10 @@ export default function Home() {
       )}
     </main>
   ) : (
-    <main className="flex h-screen flex-col">
-      <div className="fixed inset-x-0 top-0 w-full pt-2 px-2 shadow-sm bg-gray-100">
+    <main className="flex h-screen flex-col ">
+      <div className="fixed inset-x-0 top-0 w-full pt-2  shadow-sm bg-gray-100 ">
         <div
-          className="grid grid-cols-7 h-8 shadow-sm"
+          className="grid grid-cols-7 h-8 shadow-md"
           onClick={() => setExibirListaCompleta(false)}
         >
           <div className="col-span-1">
@@ -455,7 +457,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-4">
+        <div className="grid grid-cols-7 gap-4 px-2">
           <div className="col-span-2 pt-3">
             <div className="flex justify-center items-center text-6xl h-20 border-solid rounded border-2">
               75
@@ -476,18 +478,18 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-8 gap-4 mt-3 bg-gray-300 rounded ">
-          <div className="flex justify-center items-center col-span-1 h-10 ">
+        <div className="grid grid-cols-8 mx-2 mt-3 gap-2 bg-gray-300 rounded border-b border-slate-400">
+          <div className="flex justify-center items-center col-span-1 h-10  border-r border-slate-400 ">
             <strong>
               <p>Qtd</p>
             </strong>
           </div>
-          <div className="flex items-center col-span-5">
+          <div className="flex items-center col-span-5 border-r border-slate-400">
             <strong>
               <p>Descrição</p>
             </strong>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center ">
             <strong>
               <p>Valor</p>
             </strong>
@@ -496,16 +498,16 @@ export default function Home() {
       </div>
       <div className="mt-10"></div>
 
-      <div className="grid grid-cols-1 mt-36 pb-20">
+      <div className="grid grid-cols-1 mt-36 pb-20 mx-2">
         {listDeItensAdicionados.map((item) => (
-          <div className="grid grid-cols-8 gap-4 ">
+          <div className="grid grid-cols-8 ">
             <div className="flex items-center justify-center col-span-1 h-10">
               <p>{item.quant}</p>
             </div>
-            <div className="flex items-center col-span-5">
-              <p>{item.label}</p>
+            <div className="flex items-center col-span-5 border-b border-slate-200">
+              <p>{item.name}</p>
             </div>
-            <div className="flex items-center col-span-2">
+            <div className="flex items-center col-span-2 ">
               <p>{currency(item.price)}</p>
             </div>
           </div>
@@ -514,13 +516,13 @@ export default function Home() {
 
       <div className="fixed inset-x-0 bottom-0 w-full pt-2 px-2 pb-4 bg-gray-100 shadow-sm ">
         <div className="flex flex-row justify-end ">
-          <div className=" flex flex-row rounded bg-gray-300 p-2">
-            <div className="mr-2 text-3xl">
+          <div className=" flex flex-row rounded bg-black p-2">
+            <div className="mr-2 text-3xl text-white">
               <strong>
                 <p>TOTAL:</p>
               </strong>
             </div>
-            <div className="min-w-20 text-3xl">
+            <div className="min-w-20 text-3xl text-white shadow-lg">
               <strong>{total(listDeItensAdicionados)}</strong>
             </div>
           </div>

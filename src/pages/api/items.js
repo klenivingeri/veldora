@@ -1,5 +1,5 @@
 import Items from "./bussines/items"
-const wait = (time = 300) => {
+const wait = (time = 200) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
 
