@@ -2,7 +2,7 @@
 
 import currency from "../../utils/currency";
 import { useEffect, useState } from "react";
-import { useParams } from 'next/navigation';
+import { useParams } from "next/navigation";
 import { getComanda } from "../../server";
 
 const total = (items) => {
@@ -21,26 +21,22 @@ const Loading = () => {
 export default function Home() {
   const [comanda, setComanda] = useState([]);
   const [isloading, setIsLoading] = useState(true);
-  
+
   const { id } = useParams();
   useEffect(() => {
-    setIsLoading(true)
-
-    getComanda(id).then((response) => {
-      setComanda(response);
-    })
-    .finally(() => {
-      setIsLoading(false)
-    });
+    getComanda(id)
+      .then((response) => {
+        setComanda(response);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
-  
-  return !isloading 
-  ? (
+
+  return !isloading ? (
     <main className="flex h-screen flex-col ">
       <div className="fixed inset-x-0 top-0 w-full pt-2 shadow-sm bg-gray-100 ">
-        <div
-          className="flex w-full justify-center shadow-md"
-        >
+        <div className="flex w-full justify-center shadow-md">
           <div className="flex col-span-6 justify-center">
             <p className=" pb-2">
               <strong>Comanda</strong>
@@ -85,7 +81,7 @@ export default function Home() {
               <p>Descrição</p>
             </strong>
           </div>
-          <div className="flex items-center ">
+          <div className="flex items-center border-r ">
             <strong>
               <p>Valor</p>
             </strong>
@@ -96,7 +92,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 mt-36 pb-20 mx-2">
         {comanda.map((item) => (
-          <div className="grid grid-cols-8 ">
+          <div  key={item.id} className="grid grid-cols-8 ">
             <div className="flex items-center justify-center col-span-1 h-10">
               <p>{item.quant}</p>
             </div>
@@ -125,10 +121,9 @@ export default function Home() {
         </div>
       </div>
     </main>
-  )
-  :  (
+  ) : (
     <main className="flex h-screen flex-col justify-center ">
       <Loading />
     </main>
-  )
+  );
 }

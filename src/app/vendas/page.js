@@ -230,7 +230,6 @@ export default function Home() {
 
   const textFieldRef = useRef(null);
   const handleKeyboard = () => {
-    console.log(isTextKeyboard);
 
     setTextKeyboard(!isTextKeyboard);
 
@@ -270,7 +269,7 @@ export default function Home() {
                   listDeItensAdicionados
                     .slice(-3)
                     .map((item) => (
-                      <p className="w-full truncate text-white ">
+                      <p key={item.id} className="w-full truncate text-white ">
                         {serializaItem(item)}
                       </p>
                     ))
@@ -530,7 +529,7 @@ export default function Home() {
 
       <div className="grid grid-cols-1 mt-36 pb-20 mx-2">
         {listDeItensAdicionados.map((item) => (
-          <div className="grid grid-cols-8 ">
+          <div key={item.id} className="grid grid-cols-8 ">
             <div className="flex items-center justify-center col-span-1 h-10">
               <p>{item.quant}</p>
             </div>

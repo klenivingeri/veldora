@@ -41,7 +41,7 @@ export const getComanda = async (params) => {
     return  resp
     
   } catch (error) {
-    console.error('Erro ao buscar itens:', error);
+    console.error('Erro ao buscar Comanda:', error);
     return []
   }
 }
