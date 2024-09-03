@@ -115,7 +115,7 @@ export default function Home() {
               </strong>
             </div>
             <div className="min-w-20 text-3xl text-white shadow-lg">
-              <strong>{total(comanda)}</strong>
+              <strong>{currency(total(comanda))}</strong>
             </div>
           </div>
         </div>

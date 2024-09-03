@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const Card = ({title, value, img="/next.svg"}) => {
   return (
-    <div className="flex flex-col w-1/3 bg-red-500 rounded-md">
+    <div className="flex flex-col w-1/3 bg-green-500 rounded-md">
       <div className="justify-between flex flex-row">
        <h3>{title}</h3>
        <Image

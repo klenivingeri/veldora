@@ -3,6 +3,16 @@ import 'numeral/locales/pt-br'
 
 numeral.locale('pt-br')
 
-export default(value) => {
+export const currency = (value) => {
   return numeral(value).format('$ 0,0.00')
 }
+
+export const total = (items) => {
+  const totalPrice = items.reduce((acc, current) => acc + current.price, 0);
+  return totalPrice;
+};
+
+export const subTotal = (items) => {
+  const totalPrice = items.reduce((acc, current) => acc + current.price * current.quant, 0);
+  return totalPrice;
+};

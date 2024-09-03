@@ -22,7 +22,9 @@ body {
   -khtml-user-select: none;     /* Safari 2 */
   -moz-user-select: none;       /* Firefox */
   -ms-user-select: none;        /* IE10+ */
-  user-select: none;            
+  user-select: none;     
+  background: url('/peakpx.jpg') no-repeat center center;
+background-size: cover;  
 }
 body, input, textarea, button {
   font-family: 'Roboto', sans-serif;
@@ -32,4 +34,5 @@ body, input, textarea, button {
   .text-balance {
     text-wrap: balance;
   }
+  
 }

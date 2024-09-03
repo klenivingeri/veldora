@@ -1,5 +1,5 @@
 "use client";
-import currency from "../utils/currency";
+import { currency, total } from "../utils/currency";
 
 import { useEffect, useState, useRef } from "react";
 import TextField from "@mui/material/TextField";
@@ -12,6 +12,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
 import PinIcon from "@mui/icons-material/Pin";
 import { Quantidade } from "../components/organismo/Quantidade";
+import { Loading } from "../components/Loading";
 import { testServer, getListItems } from "../server";
 import QRCode from "react-qr-code";
 
@@ -126,10 +127,6 @@ const itensAdicionadosALista = [
   },
 ];
 
-const total = (items) => {
-  const totalPrice = items.reduce((acc, current) => acc + current.price, 0);
-  return currency(totalPrice);
-};
 
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
@@ -144,7 +141,6 @@ const toggleFullScreen = () => {
 };
 
 const serializaItem = (item) => {
-  console.log(item);
   const num = item?.quant.toString().padStart(2, "0");
   const text = `${num} - ${item?.name}`;
   return text;
@@ -203,14 +199,6 @@ const handleAdicionaItem = async (
   setLastClickTime(currentTime);
 };
 
-const Loading = () => {
-  return (
-    <div className="flex justify-center items-center h-4">
-      <div className="w-4 h-4 border-2 border-gray-100 border-solid border-t-transparent rounded-full animate-spin"></div>
-    </div>
-  );
-};
-
 export default function Home() {
   const [listaSelecaoItems, setListaSelecaoItems] = useState([]);
   const [lastClickTime, setLastClickTime] = useState(null);
@@ -218,9 +206,7 @@ export default function Home() {
   const [inputDetails, setInputDetails] = useState("");
   const [quantidade, setQuantidade] = useState(0);
   const [exibirListaCompleta, setExibirListaCompleta] = useState(false);
-  const [listDeItensAdicionados, setListDeItensAdicionados] = useState(
-    itensAdicionadosALista
-  );
+  const [listDeItensAdicionados, setListDeItensAdicionados] = useState(itensAdicionadosALista);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalQRCodeOpen, setIsModalQRCodeOpen] = useState(false);
   const [isLoadingAddItem, setIsLoadingAddItem] = useState(false);
@@ -248,7 +234,7 @@ export default function Home() {
     <main className="flex h-screen flex-col bg-[url('https://img.freepik.com/vetores-gratis/fundo-branco-abstrato_23-2148844576.jpg?t=st=1724806453~exp=1724810053~hmac=27c5c135e50728ff0302d4be5b2fbbe5b09906d77d9b372da3294a2d75c4738c&w=996')]">
       <div className="flex w-full flex-col p-2 gap-4 ">
         <div className="grid grid-cols-7 gap-4 border border-gray-300 p-2 rounded">
-          <div className="col-span-2 ">
+          <div className="col-span-2">
             <p className="text-xs">
               <strong>Comanda</strong>
             </p>
@@ -552,7 +538,7 @@ export default function Home() {
               </strong>
             </div>
             <div className="min-w-20 text-3xl text-white shadow-lg">
-              <strong>{total(listDeItensAdicionados)}</strong>
+              <strong>{currency(total(listDeItensAdicionados))}</strong>
             </div>
           </div>
         </div>
