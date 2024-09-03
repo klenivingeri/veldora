@@ -1,59 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { currency, subTotal } from "../utils/currency";
 import { Loading } from "../components/Loading";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { getComanda } from "../server";
-import Switch from "@mui/material/Switch";
-import { styled } from "@mui/material/styles";
-
-const AntSwitch = styled(Switch)(({ theme }) => ({
-  width: 28,
-  height: 16,
-  padding: 0,
-  display: "flex",
-  "&:active": {
-    "& .MuiSwitch-thumb": {
-      width: 15,
-    },
-    "& .MuiSwitch-switchBase.Mui-checked": {
-      transform: "translateX(9px)",
-    },
-  },
-  "& .MuiSwitch-switchBase": {
-    padding: 2,
-    "&.Mui-checked": {
-      transform: "translateX(12px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        opacity: 1,
-        backgroundColor: "#cccccc",
-        ...theme.applyStyles("dark", {
-          backgroundColor: "#cccccc",
-        }),
-      },
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    transition: theme.transitions.create(["width"], {
-      duration: 200,
-    }),
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 16 / 2,
-    opacity: 1,
-    backgroundColor: "rgba(0,0,0,.25)",
-    boxSizing: "border-box",
-    ...theme.applyStyles("dark", {
-      backgroundColor: "rgba(255,255,255,.35)",
-    }),
-  },
-}));
+import { AntSwitch } from "../components/AntSwitch";
 
 const troco = (valorRecebido, subTotal) => {
   const result = !valorRecebido ? 0 : valorRecebido - subTotal;
@@ -61,6 +13,7 @@ const troco = (valorRecebido, subTotal) => {
 };
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [comanda, setComanda] = useState([]);
   const [valorRecebido, setValorRecebido] = useState("");
   const [isLoadingFinalizarComanda, setIsLoadingFinalizarComanda] =
@@ -85,19 +38,34 @@ export default function Home() {
     }, 500);
   };
 
-  useEffect(() => {
-    getComanda().then((response) => {
-      setComanda(response);
-    });
-  }, []);
-
   const handleInputValue = () => {
     refInputValue.current.focus();
   };
 
+  const handleGetComanda = () => {
+    getComanda().then((response) => {
+      setComanda(response);
+    });
+  };
+
   return (
     <main className="flex min-h-screen flex-col justify-center px-40">
-      <div className="mt-2 mb-2 pb-2 bg-white/80 backdrop-blur-sm rounded-lg min-w-[1150px] border-slate-300 border-2 shadow-lg ">
+      <div className="grid grid-cols-12 min-w-[1150px]">
+        <div className="col-span-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border-slate-300 border-2">
+          <button
+            className="px-4 h-10 w-full py-2 rounded text-white bg-slate-950 border-inherit shadow-lg"
+            onClick={() => setIsModalOpen(true)}
+          >
+            {isLoadingFinalizarComanda ? <Loading /> : "Carregar comanda"}
+          </button>
+        </div>
+        <div className="col-span-8"></div>
+      </div>
+      <div className="grid grid-cols-12 mb-2 ml-4 min-w-[1150px]">
+        <div className="col-span-8 "></div>
+        <div className="col-span-4 flex"></div>
+      </div>
+      <div className="mb-2 pb-2 bg-white/80 backdrop-blur-sm rounded-lg min-w-[1150px] border-slate-300 border-2 shadow-lg ">
         <div className="bg-black rounded-t-lg pl-2 pr-5">
           <div className="grid grid-cols-12 text-3xl py-2  text-white ">
             <div className="col-span-1 flex justify-center">
@@ -119,13 +87,13 @@ export default function Home() {
                 className="grid grid-cols-12 text-2xl  border-l-[5px] border-l-slate-900 border-slate-100 shadow-md my-1 py-1 rounded-lg ml-2 mr-1"
               >
                 <div className="col-span-1 flex justify-center py-4">
-                 <strong> {item.quant}</strong>
+                  <strong> {item.quant}</strong>
                 </div>
                 <div className="col-span-9 pl-5 border-l-2 border-black py-4">
-                  {item.name}
+                <strong>{item.name}</strong>
                 </div>
                 <div className="col-span-2 pl-4 border-l-2 border-black py-3">
-                <strong> {currency(item.price)}</strong>
+                  <strong> {currency(item.price)}</strong>
                 </div>
               </div>
             );
@@ -147,7 +115,7 @@ export default function Home() {
                 </strong>
               </div>
               <div className="mr-2">
-                <AntSwitch onChange={() => setHideTroco(!hideTroco)} />
+                <AntSwitch setValue={setHideTroco} value={hideTroco} />
               </div>
             </div>
             <div className="">
@@ -158,81 +126,113 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {hideTroco &&(<div className="grid grid-cols-12 gap-2 text-3xl mb-2 min-w-[1150px]">
-        <div className="col-span-8"></div>
-        <div className="col-span-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border-slate-300 border-2">
-          <div className="">
-            <div
-              className="flex gap-2 pl-2 py-1 items-center w-full text-white bg-black text-xs rounded-t-lg"
-              onClick={() => handleInputValue()}
-            >
-              <MonetizationOnIcon
-                sx={{ height: "20px", width: "20px" }}
-                fontSize="medium"
-              />
-              <strong>
-                <p>TOTAL RECEBIDO </p>
-              </strong>
-            </div>
-            <div className="grid ">
-              <div className="flex gap-1 justify-end items-center text-3xl col-span-9">
-                <input
-                  ref={refInputValue}
-                  value={value}
-                  placeholder="R$ 0,00"
-                  className="w-[100%] pr-1 border-0 rounded-lg font-bold text-right border-b focus:border-slate-200 focus:outline-none"
-                  onChange={onChangeMascValue}
-                  type="num"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-2 bg-white/80 backdrop-blur-sm rounded-lg  shadow-lg border-slate-300 border-2">
-          <div className="">
-            <div className="flex flex-row gap-2 pl-2 py-1 items-center  w-full text-white bg-black text-xs rounded-t-lg">
-              <MonetizationOnIcon
-                sx={{ height: "20px", width: "20px" }}
-                fontSize="medium"
-              />
-              <strong>
-                <p>TROCO </p>
-              </strong>
-            </div>
+      {hideTroco && (
+        <div className="grid grid-cols-12 gap-2 text-3xl mb-2 min-w-[1150px]">
+          <div className="col-span-8"></div>
+          <div className="col-span-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border-slate-300 border-2">
             <div className="">
-              <div className="flex justify-end items-center text-3xl col-span-9 pr-1">
-                <strong>{troco(valorRecebido, subTotal(comanda))}</strong>
+              <div
+                className="flex gap-2 pl-2 py-1 items-center w-full text-white bg-black text-xs rounded-t-lg"
+                onClick={() => handleInputValue()}
+              >
+                <MonetizationOnIcon
+                  sx={{ height: "20px", width: "20px" }}
+                  fontSize="medium"
+                />
+                <strong>
+                  <p>TOTAL RECEBIDO </p>
+                </strong>
+              </div>
+              <div className="grid ">
+                <div className="flex gap-1 justify-end items-center text-3xl col-span-9">
+                  <input
+                    ref={refInputValue}
+                    value={value}
+                    placeholder="R$ 0,00"
+                    className="w-[100%] pr-1 border-0 rounded-lg font-bold text-right border-b focus:border-slate-200 focus:outline-none"
+                    onChange={onChangeMascValue}
+                    type="num"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-span-2 bg-white/80 backdrop-blur-sm rounded-lg  shadow-lg border-slate-300 border-2">
+            <div className="">
+              <div className="flex flex-row gap-2 pl-2 py-1 items-center  w-full text-white bg-black text-xs rounded-t-lg">
+                <MonetizationOnIcon
+                  sx={{ height: "20px", width: "20px" }}
+                  fontSize="medium"
+                />
+                <strong>
+                  <p>TROCO </p>
+                </strong>
+              </div>
+              <div className="">
+                <div className="flex justify-end items-center text-3xl col-span-9 pr-1">
+                  <strong>{troco(valorRecebido, subTotal(comanda))}</strong>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
-    <div className="grid grid-cols-12 gap-2 mb-2 min-w-[1150px]">
+      )}
+      <div className="grid grid-cols-12 gap-2 mb-2 min-w-[1150px]">
         <div className="col-span-8"></div>
         <div className="col-span-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border-slate-300 border-2">
-        <button
+          <button
             className={`px-4 h-10 w-full py-2 rounded text-white ${
               isLoadingFinalizarComanda && "cursor-not-allowed"
             } 
               ${
-                 !valorRecebido && hideTroco != false
+                !valorRecebido && hideTroco != false
                   ? "bg-gray-400 cursor-not-allowed "
                   : "bg-slate-950 border-inherit shadow-lg"
               }`}
             disabled={!valorRecebido && hideTroco != false}
-            onClick={()=> console.log('osasopdkasdp')}
+            onClick={() => console.log("osasopdkasdp")}
           >
             {isLoadingFinalizarComanda ? <Loading /> : "FINALIZAR COMANDA"}
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-12 mb-2 ml-4 min-w-[1150px]">
-        <div className="col-span-8 "></div>
-        <div className="col-span-4 flex">
-          
+      {isModalOpen && (
+        <div
+          id="modal"
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4">
+              Insira o numero da comanda
+            </h2>
+            <div className="m-2">
+            <input
+              placeholder="Numero da comanda"
+              className="w-[100%] pr-1 h-10 text-3xl border-2 rounded-md"
+              onChange={onChangeMascValue}
+              type="num"
+            />
+            </div>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  handleGetComanda();
+                }}
+                className="px-4 py-2 bg-slate-950 border-inherit shadow-lg text-white rounded"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </main>
   );
 }

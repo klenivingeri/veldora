@@ -4,9 +4,7 @@ export default class Comanda {
     
   }
 
-
   async getComanda(params) {
-    console.log(params)
     return itemsDaComanda
   }
 }
