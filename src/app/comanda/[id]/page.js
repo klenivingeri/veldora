@@ -1,14 +1,9 @@
 "use client";
 
-import currency from "../../utils/currency";
+import { currency, subTotal } from "../../utils/currency";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getComanda } from "../../server";
-
-const total = (items) => {
-  const totalPrice = items.reduce((acc, current) => acc + current.price, 0);
-  return currency(totalPrice);
-};
 
 const Loading = () => {
   return (
@@ -33,9 +28,10 @@ export default function Home() {
       });
   }, []);
 
+  console.log(comanda)
   return !isloading ? (
     <main className="flex h-screen flex-col ">
-      <div className="fixed inset-x-0 top-0 w-full pt-2 shadow-sm bg-gray-100 ">
+      <div className="fixed inset-x-0 top-0 w-full z-50 pt-2 shadow-sm bg-gray-100 ">
         <div className="flex w-full justify-center shadow-md">
           <div className="flex col-span-6 justify-center">
             <p className=" pb-2">
@@ -70,18 +66,18 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-8 mx-2 mt-3 gap-2 bg-gray-300 rounded border-b border-slate-400">
-          <div className="flex justify-center items-center col-span-1 h-10  border-r border-slate-400 ">
+        <div className="grid grid-cols-8 mx-2 mt-3 gap-2 bg-black rounded border-b border-black">
+          <div className="flex justify-center items-center col-span-1 h-10 text-white ">
             <strong>
               <p>Qtd</p>
             </strong>
           </div>
-          <div className="flex items-center col-span-5 border-r border-slate-400">
+          <div className="flex items-center col-span-5 text-white">
             <strong>
               <p>Descrição</p>
             </strong>
           </div>
-          <div className="flex items-center border-r ">
+          <div className="flex items-center text-white ">
             <strong>
               <p>Valor</p>
             </strong>
@@ -90,17 +86,17 @@ export default function Home() {
       </div>
       <div className="mt-10"></div>
 
-      <div className="grid grid-cols-1 mt-36 pb-20 mx-2">
+      <div className="grid grid-cols-1 mt-36 pb-20 mx-2 ">
         {comanda.map((item) => (
-          <div  key={item.id} className="grid grid-cols-8 ">
+          <div key={item.id} className="grid grid-cols-8 border-2 backdrop-blur-sm border-l-black border-l-4 rounded-md shadow-lg mt-2">
             <div className="flex items-center justify-center col-span-1 h-10">
               <p>{item.quant}</p>
             </div>
-            <div className="flex items-center col-span-5 border-b border-slate-200">
+            <div className="flex items-center col-span-5">
               <p>{item.name}</p>
             </div>
             <div className="flex items-center col-span-2 ">
-              <p>{currency(item.price)}</p>
+              <p>{currency(item?.price)}</p>
             </div>
           </div>
         ))}
@@ -111,11 +107,11 @@ export default function Home() {
           <div className=" flex flex-row rounded bg-black p-2">
             <div className="mr-2 text-3xl text-white">
               <strong>
-                <p>TOTAL:</p>
+                <p>SUBTOTAL:</p>
               </strong>
             </div>
             <div className="min-w-20 text-3xl text-white shadow-lg">
-              <strong>{currency(total(comanda))}</strong>
+              <strong>{currency(subTotal(comanda))}</strong>
             </div>
           </div>
         </div>

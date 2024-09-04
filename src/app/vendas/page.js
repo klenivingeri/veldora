@@ -1,5 +1,5 @@
 "use client";
-import { currency, total } from "../utils/currency";
+import { currency, subTotal, total } from "../utils/currency";
 
 import { useEffect, useState, useRef } from "react";
 import TextField from "@mui/material/TextField";
@@ -127,7 +127,6 @@ const itensAdicionadosALista = [
   },
 ];
 
-
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch((err) => {
@@ -208,6 +207,7 @@ export default function Home() {
   const [exibirListaCompleta, setExibirListaCompleta] = useState(false);
   const [listDeItensAdicionados, setListDeItensAdicionados] = useState(itensAdicionadosALista);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalGetComandaOpen, setIsModalGetComandaOpen] = useState(false);
   const [isModalQRCodeOpen, setIsModalQRCodeOpen] = useState(false);
   const [isLoadingAddItem, setIsLoadingAddItem] = useState(false);
   const [description, setDescription] = useState(false);
@@ -231,14 +231,15 @@ export default function Home() {
   }, []);
 
   return !exibirListaCompleta ? (
-    <main className="flex h-screen flex-col bg-[url('https://img.freepik.com/vetores-gratis/fundo-branco-abstrato_23-2148844576.jpg?t=st=1724806453~exp=1724810053~hmac=27c5c135e50728ff0302d4be5b2fbbe5b09906d77d9b372da3294a2d75c4738c&w=996')]">
+    <main className="flex h-screen flex-col backdrop-blur-sm">
       <div className="flex w-full flex-col p-2 gap-4 ">
         <div className="grid grid-cols-7 gap-4 border border-gray-300 p-2 rounded">
-          <div className="col-span-2">
+          <div className="col-span-2"
+            onClick={() => setIsModalGetComandaOpen(!isModalGetComandaOpen)}>
             <p className="text-xs">
-              <strong>Comanda</strong>
+              Comanda
             </p>
-            <div className="flex justify-center items-center text-6xl h-20 border-black border-solid rounded border-2 shadow-lg">
+            <div className="flex justify-center items-center text-5xl h-15 border-black border-solid rounded border-2 shadow-lg">
               75
             </div>
           </div>
@@ -247,17 +248,17 @@ export default function Home() {
             onClick={() => setExibirListaCompleta(true)}
           >
             <p className="text-xs">
-              <strong>Ultimos itens adicionados</strong>
+              Ultimos itens adicionados
             </p>
-            <div className="flex h-20 border-solid rounded border-2 bg-slate-950 border-black shadow-lg ">
+            <div className="flex h-15 border-solid rounded border-2 bg-slate-950 border-black shadow-lg ">
               <div className="flex w-full flex-col pl-2 justify-end ">
                 {listDeItensAdicionados.length ? (
                   listDeItensAdicionados
                     .slice(-3)
                     .map((item) => (
-                      <p key={item.id} className="w-full truncate text-white ">
+                      <strong> <p key={item.id} className="w-full text-xs truncate text-white ">
                         {serializaItem(item)}
-                      </p>
+                      </p></strong>
                     ))
                 ) : (
                   <p className="w-full truncate text-white ">...</p>
@@ -270,7 +271,7 @@ export default function Home() {
           <div className="w-full">
             <Autocomplete
               value={value ? value : text}
-              disablePortal
+              freeSolo
               onChange={(event, newValue) => {
                 if (newValue == null) {
                   setQuantidade(0);
@@ -283,9 +284,10 @@ export default function Home() {
                 setText("");
               }}
               disabled={!listaSelecaoItems.length}
-              id="combo-box-demo"
+              id="free-solo-2-demo"
               options={listaSelecaoItems}
               size="small"
+              disableClearable
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -299,9 +301,23 @@ export default function Home() {
                   inputProps={{
                     ...params.inputProps,
                     inputMode: isTextKeyboard ? "numeric" : "text",
+                    type: 'search',
+                    autoComplete: 'off',
+                    autoCorrect: 'off',
+                    autoCapitalize: 'off',
+                    spellCheck: 'false'
                   }}
                   onChange={(event) => {
+                    if (event.target.value == null) {
+                      setQuantidade(0);
+                      setText("");
+                    } else {
+                      setQuantidade(1);
+                    }
                     setText(event.target.value);
+                    setValue(event.target.value);
+                    setInputDetails("");
+                    setDescription(false);
                   }}
                 />
               )}
@@ -441,10 +457,36 @@ export default function Home() {
           </div>
         </div>
       )}
+      {isModalGetComandaOpen && (
+             <div
+             id="modal"
+             className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+           >
+             <div className="bg-white rounded-lg shadow-lg  max-w-sm w-full">
+               <div
+                 className="flex  justify-end p-3"
+                 onClick={() => setIsModalGetComandaOpen(false)}
+               >
+                 <div className=" rounded-lg">
+                 <CloseIcon />
+                 </div>
+                 
+               </div>
+               <div className="pl-6 pr-6 pb-6">
+                 <QRCode
+                   size={256}
+                   style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                   value={`https://anotaai-eight.vercel.app/comanda/123e4567-e89b-12d3-a456-426655440000`}
+                   viewBox={`0 0 256 256`}
+                 />
+               </div>
+             </div>
+           </div>
+      )}
     </main>
   ) : (
     <main className="flex h-screen flex-col ">
-      <div className="fixed inset-x-0 top-0 w-full pt-2  shadow-sm bg-gray-100 ">
+      <div className="fixed inset-x-0 top-0 w-full z-50 pt-2 shadow-sm bg-gray-100 backdrop-blur-sm ">
         <div
           className="grid grid-cols-7 h-8 shadow-md"
           onClick={() => setExibirListaCompleta(false)}
@@ -461,7 +503,7 @@ export default function Home() {
 
         <div className="grid grid-cols-7 gap-4 px-2">
           <div className="col-span-2 pt-3">
-            <div className="flex justify-center items-center text-6xl h-20 border-solid rounded border-2">
+            <div className="flex justify-center items-center text-6xl h-20 rounded border-2 border-black">
               75
             </div>
           </div>
@@ -481,7 +523,7 @@ export default function Home() {
           </div>
           <div className="col-span-2 pt-3">
             <div
-              className="flex justify-center items-center text-6xl h-20 border-solid"
+              className="flex justify-center items-center text-6xl h-20"
               onClick={() => setIsModalQRCodeOpen(!isModalQRCodeOpen)}
             >
               <QRCode
@@ -493,33 +535,34 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-8 mx-2 mt-3 gap-2 bg-gray-300 rounded border-b border-slate-400">
-          <div className="flex justify-center items-center col-span-1 h-10  border-slate-400 ">
+        <div className="grid grid-cols-8 mx-2 mt-3 gap-2 bg-black rounded border-b border-black">
+          <div className="flex justify-center items-center col-span-1 h-10 text-white ">
             <strong>
               <p>Qtd</p>
             </strong>
           </div>
-          <div className="flex items-center col-span-5 border-l border-slate-400">
+          <div className="flex items-center col-span-5 text-white">
             <strong>
               <p>Descrição</p>
             </strong>
           </div>
-          <div className="flex items-center ">
+          <div className="flex items-center text-white ">
             <strong>
               <p>Valor</p>
             </strong>
           </div>
         </div>
       </div>
+      
       <div className="mt-10"></div>
 
-      <div className="grid grid-cols-1 mt-36 pb-20 mx-2">
+      <div className="grid grid-cols-1 mt-36 pb-20 mx-2 ">
         {listDeItensAdicionados.map((item) => (
-          <div key={item.id} className="grid grid-cols-8 ">
+          <div key={item.id} className="grid grid-cols-8 border-2 backdrop-blur-sm border-l-black border-l-4 rounded-md shadow-lg mt-2">
             <div className="flex items-center justify-center col-span-1 h-10">
               <p>{item.quant}</p>
             </div>
-            <div className="flex items-center col-span-5 border-b border-slate-200">
+            <div className="flex items-center col-span-5">
               <p>{item.name}</p>
             </div>
             <div className="flex items-center col-span-2 ">
@@ -534,11 +577,11 @@ export default function Home() {
           <div className=" flex flex-row rounded bg-black p-2">
             <div className="mr-2 text-3xl text-white">
               <strong>
-                <p>TOTAL:</p>
+                <p>SUBTOTAL:</p>
               </strong>
             </div>
             <div className="min-w-20 text-3xl text-white shadow-lg">
-              <strong>{currency(total(listDeItensAdicionados))}</strong>
+              <strong>{currency(subTotal(listDeItensAdicionados))}</strong>
             </div>
           </div>
         </div>

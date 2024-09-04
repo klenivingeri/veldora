@@ -16,8 +16,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [comanda, setComanda] = useState([]);
   const [valorRecebido, setValorRecebido] = useState("");
-  const [isLoadingFinalizarComanda, setIsLoadingFinalizarComanda] =
-    useState(false);
+  const [isLoadingFinalizarComanda, setIsLoadingFinalizarComanda] = useState(false);
   const [hideTroco, setHideTroco] = useState(false);
   const [value, setValue] = useState("");
   const refInputValue = useRef();
@@ -35,7 +34,7 @@ export default function Home() {
     timerRef.current = setTimeout(() => {
       console.log("Executando ação após 3 segundos de inatividade");
       setValorRecebido(formattedValue);
-    }, 500);
+    }, 300);
   };
 
   const handleInputValue = () => {
@@ -51,7 +50,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col justify-center px-40">
       <div className="grid grid-cols-12 min-w-[1150px]">
-        <div className="col-span-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg border-slate-300 border-2">
+        <div className="col-span-4 bg-white/80  rounded-lg shadow-lg border-slate-300 border-2">
           <button
             className="px-4 h-10 w-full py-2 rounded text-white bg-slate-950 border-inherit shadow-lg"
             onClick={() => setIsModalOpen(true)}
@@ -65,8 +64,8 @@ export default function Home() {
         <div className="col-span-8 "></div>
         <div className="col-span-4 flex"></div>
       </div>
-      <div className="mb-2 pb-2 bg-white/80 backdrop-blur-sm rounded-lg min-w-[1150px] border-slate-300 border-2 shadow-lg ">
-        <div className="bg-black rounded-t-lg pl-2 pr-5">
+      <div className="mb-2 pb-2 bg-white/80 rounded-lg min-w-[1150px] border-slate-300 border-2 shadow-lg ">
+        <div className="bg-black rounded-t-lg pl-2 pr-5  backdrop-blur-sm">
           <div className="grid grid-cols-12 text-3xl py-2  text-white ">
             <div className="col-span-1 flex justify-center">
               <strong>Qtd</strong>
@@ -84,15 +83,15 @@ export default function Home() {
             return (
               <div
                 key={item.id}
-                className="grid grid-cols-12 text-2xl  border-l-[5px] border-l-slate-900 border-slate-100 shadow-md my-1 py-1 rounded-lg ml-2 mr-1"
+                className="grid grid-cols-12 text-2xl  border-l-[5px]  backdrop-blur-sm border-l-slate-900 border-white border-2 shadow-lg my-1 py-1 rounded-lg ml-2 mr-1"
               >
                 <div className="col-span-1 flex justify-center py-4">
                   <strong> {item.quant}</strong>
                 </div>
-                <div className="col-span-9 pl-5 border-l-2 border-black py-4">
+                <div className="col-span-9 pl-3 flex items-center">
                 <strong>{item.name}</strong>
                 </div>
-                <div className="col-span-2 pl-4 border-l-2 border-black py-3">
+                <div className="flex items-center col-span-2 pl-4 border-l-2 ">
                   <strong> {currency(item.price)}</strong>
                 </div>
               </div>
