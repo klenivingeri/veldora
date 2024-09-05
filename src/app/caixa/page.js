@@ -14,7 +14,8 @@ const troco = (valorRecebido, subTotal) => {
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [comanda, setComanda] = useState([]);
+  const [comanda, setComanda] = useState({records:[]});
+  const [numComanda, setNumComanda] = useState("")
   const [valorRecebido, setValorRecebido] = useState("");
   const [isLoadingFinalizarComanda, setIsLoadingFinalizarComanda] = useState(false);
   const [hideTroco, setHideTroco] = useState(false);
@@ -37,12 +38,13 @@ export default function Home() {
     }, 300);
   };
 
+
   const handleInputValue = () => {
     refInputValue.current.focus();
   };
 
   const handleGetComanda = () => {
-    getComanda().then((response) => {
+    getComanda(numComanda).then((response) => {
       setComanda(response);
     });
   };
@@ -79,7 +81,7 @@ export default function Home() {
           </div>
         </div>
         <div className={`flex flex-col overflow-y-auto h-[400px]`}>
-          {comanda?.map((item = []) => {
+          {comanda.records?.map((item = []) => {
             return (
               <div
                 key={item.id}
@@ -119,7 +121,7 @@ export default function Home() {
             </div>
             <div className="">
               <div className="flex justify-end items-center text-4xl col-span-9 p-1">
-                <strong>{currency(subTotal(comanda))}</strong>
+                <strong>{currency(subTotal(comanda.records))}</strong>
               </div>
             </div>
           </div>
@@ -169,7 +171,7 @@ export default function Home() {
               </div>
               <div className="">
                 <div className="flex justify-end items-center text-3xl col-span-9 pr-1">
-                  <strong>{troco(valorRecebido, subTotal(comanda))}</strong>
+                  <strong>{troco(valorRecebido, subTotal(comanda.records))}</strong>
                 </div>
               </div>
             </div>
@@ -207,8 +209,8 @@ export default function Home() {
             <div className="m-2">
             <input
               placeholder="Numero da comanda"
-              className="w-[100%] pr-1 h-10 text-3xl border-2 rounded-md"
-              onChange={onChangeMascValue}
+              className="w-[100%] pr-1 h-10 border-2 rounded-md pl-2"
+              onChange={(e) => setNumComanda(e.target.value)}
               type="num"
             />
             </div>

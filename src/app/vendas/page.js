@@ -1,6 +1,7 @@
 "use client";
-import { currency, subTotal, total } from "../utils/currency";
 
+import QRCode from "react-qr-code";
+import { currency, subTotal } from "../utils/currency";
 import { useEffect, useState, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -13,119 +14,8 @@ import KeyboardIcon from "@mui/icons-material/Keyboard";
 import PinIcon from "@mui/icons-material/Pin";
 import { Quantidade } from "../components/organismo/Quantidade";
 import { Loading } from "../components/Loading";
-import { testServer, getListItems } from "../server";
-import QRCode from "react-qr-code";
-
-const itensAdicionadosALista = [
-  {
-    id: "1",
-    name: "City of God",
-    price: 20,
-    quant: 1,
-  },
-  {
-    id: "2",
-    name: "Se7en",
-    price: 1.5,
-    quant: 1,
-  },
-  {
-    id: "3",
-    name: "The Silence of the Lambs",
-    price: 11,
-    quant: 1,
-  },
-  {
-    id: "4",
-    name: "It's a Wonderful Life",
-    price: 4.6,
-    quant: 1,
-  },
-  {
-    id: "5",
-    name: "Life Is Beautiful",
-    price: 9.7,
-    quant: 1,
-  },
-  {
-    id: "6",
-    name: "The Usual Suspects",
-    price: 95,
-    quant: 1,
-  },
-  {
-    id: "7",
-    name: "Léon: The Professional",
-    price: 199,
-    quant: 1,
-  },
-  {
-    id: "8",
-    name: "Spirited Away",
-    price: 1,
-    quant: 1,
-  },
-  {
-    id: "9",
-    name: "Saving Private Ryan",
-    price: 18,
-    quant: 1,
-  },
-  {
-    id: "10",
-    name: "Once Upon a Time in the West Once Upon a Time in the West",
-    price: 6.8,
-    quant: 1,
-  },
-  {
-    id: "11",
-    name: "American History X",
-    price: 98,
-    quant: 1,
-  },
-  {
-    id: "12",
-    name: "Interstellar",
-    price: 14,
-    quant: 1,
-  },
-  {
-    id: "13",
-    name: "Casablanca",
-    price: 12,
-    quant: 1,
-  },
-  {
-    id: "14",
-    name: "City Lights",
-    price: 11,
-    quant: 1,
-  },
-  {
-    id: "15",
-    name: "Psycho",
-    price: 19.6,
-    quant: 1,
-  },
-  {
-    id: "16",
-    name: "The Green Mile",
-    price: 199,
-    quant: 1,
-  },
-  {
-    id: "17",
-    name: "The Intouchables",
-    price: 20.11,
-    quant: 1,
-  },
-  {
-    id: "18",
-    name: "Modern Times",
-    price: 19.36,
-    quant: 1,
-  },
-];
+import { ModalComanda } from "../components/ModalComanda";
+import { testServer, getListItems, getComanda, postComanda } from "../server";
 
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
@@ -193,7 +83,9 @@ const handleAdicionaItem = async (
   setQuantidade(0);
 
   setListItens((prevList) => {
-    return [...prevList, obj];
+    return {...prevList,
+      records :[...prevList.records, obj]
+    };
   });
   setLastClickTime(currentTime);
 };
@@ -205,18 +97,18 @@ export default function Home() {
   const [inputDetails, setInputDetails] = useState("");
   const [quantidade, setQuantidade] = useState(0);
   const [exibirListaCompleta, setExibirListaCompleta] = useState(false);
-  const [listDeItensAdicionados, setListDeItensAdicionados] = useState(itensAdicionadosALista);
+  const [listDeItensAdicionados, setListDeItensAdicionados] = useState({records:[]});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalGetComandaOpen, setIsModalGetComandaOpen] = useState(false);
   const [isModalQRCodeOpen, setIsModalQRCodeOpen] = useState(false);
   const [isLoadingAddItem, setIsLoadingAddItem] = useState(false);
+  const [isLoadingComanda, setIsLoadingComanda] = useState(false);
   const [description, setDescription] = useState(false);
   const [isTextKeyboard, setTextKeyboard] = useState(false);
   const [text, setText] = useState("");
 
   const textFieldRef = useRef(null);
   const handleKeyboard = () => {
-
     setTextKeyboard(!isTextKeyboard);
 
     if (textFieldRef.current) {
@@ -224,42 +116,68 @@ export default function Home() {
     }
   };
 
+  const get = (params) => {
+    setIsLoadingComanda(true)
+    getComanda(params).then((response) => {
+      setListDeItensAdicionados(response);
+    }).finally(() => {
+      setIsLoadingComanda(false)
+    });
+  }
+  
+  const post = (params) => {
+    setIsLoadingComanda(true)
+    postComanda(params).then((response) => {
+      setListDeItensAdicionados(response);
+    }).finally(() => {
+      setIsLoadingComanda(false)
+    });
+  }
+
   useEffect(() => {
     getListItems().then((response) => {
       setListaSelecaoItems(response);
-    });
+    })
+    .finally(() => {
+      setIsLoading(false);
+    })
   }, []);
 
   return !exibirListaCompleta ? (
     <main className="flex h-screen flex-col backdrop-blur-sm">
       <div className="flex w-full flex-col p-2 gap-4 ">
         <div className="grid grid-cols-7 gap-4 border border-gray-300 p-2 rounded">
-          <div className="col-span-2"
-            onClick={() => setIsModalGetComandaOpen(!isModalGetComandaOpen)}>
-            <p className="text-xs">
-              Comanda
-            </p>
-            <div className="flex justify-center items-center text-5xl h-15 border-black border-solid rounded border-2 shadow-lg">
-              75
+          <div
+            className="col-span-2"
+            onClick={() => setIsModalGetComandaOpen(!isModalGetComandaOpen)}
+          >
+            <p className="text-xs">Comanda</p>
+            <div className="flex justify-center items-center text-5xl h-15 min-h-[50px] border-black border-solid rounded border-2 shadow-lg">
+              {isLoadingComanda
+              ? <Loading color="black" />
+              : listDeItensAdicionados?.id ? listDeItensAdicionados.id : '...'
+              }
             </div>
           </div>
           <div
             className="col-span-5"
             onClick={() => setExibirListaCompleta(true)}
           >
-            <p className="text-xs">
-              Ultimos itens adicionados
-            </p>
-            <div className="flex h-15 border-solid rounded border-2 bg-slate-950 border-black shadow-lg ">
+            <p className="text-xs">Ultimos itens adicionados</p>
+            <div className="flex h-15 border-solid rounded border-2 min-h-[50px] bg-slate-950 border-black shadow-lg ">
               <div className="flex w-full flex-col pl-2 justify-end ">
-                {listDeItensAdicionados.length ? (
-                  listDeItensAdicionados
-                    .slice(-3)
-                    .map((item) => (
-                      <strong> <p key={item.id} className="w-full text-xs truncate text-white ">
+                {listDeItensAdicionados.records.length && !isLoadingComanda ?  (
+                  listDeItensAdicionados.records.slice(-3).map((item) => (
+                    <strong>
+                      {" "}
+                      <p
+                        key={item.id}
+                        className="w-full text-xs truncate text-white "
+                      >
                         {serializaItem(item)}
-                      </p></strong>
-                    ))
+                      </p>
+                    </strong>
+                  ))
                 ) : (
                   <p className="w-full truncate text-white ">...</p>
                 )}
@@ -301,11 +219,11 @@ export default function Home() {
                   inputProps={{
                     ...params.inputProps,
                     inputMode: isTextKeyboard ? "numeric" : "text",
-                    type: 'search',
-                    autoComplete: 'off',
-                    autoCorrect: 'off',
-                    autoCapitalize: 'off',
-                    spellCheck: 'false'
+                    type: "search",
+                    autoComplete: "off",
+                    autoCorrect: "off",
+                    autoCapitalize: "off",
+                    spellCheck: "false",
                   }}
                   onChange={(event) => {
                     if (event.target.value == null) {
@@ -397,7 +315,7 @@ export default function Home() {
                 setValue,
                 quantidade,
                 setQuantidade,
-                listDeItensAdicionados,
+                listDeItensAdicionados.records,
                 setListDeItensAdicionados,
                 setIsModalOpen,
                 setLastClickTime,
@@ -438,7 +356,7 @@ export default function Home() {
                     setValue,
                     quantidade,
                     setQuantidade,
-                    listDeItensAdicionados,
+                    listDeItensAdicionados.records,
                     setListDeItensAdicionados,
                     setIsModalOpen,
                     setLastClickTime,
@@ -458,30 +376,9 @@ export default function Home() {
         </div>
       )}
       {isModalGetComandaOpen && (
-             <div
-             id="modal"
-             className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
-           >
-             <div className="bg-white rounded-lg shadow-lg  max-w-sm w-full">
-               <div
-                 className="flex  justify-end p-3"
-                 onClick={() => setIsModalGetComandaOpen(false)}
-               >
-                 <div className=" rounded-lg">
-                 <CloseIcon />
-                 </div>
-                 
-               </div>
-               <div className="pl-6 pr-6 pb-6">
-                 <QRCode
-                   size={256}
-                   style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                   value={`https://anotaai-eight.vercel.app/comanda/123e4567-e89b-12d3-a456-426655440000`}
-                   viewBox={`0 0 256 256`}
-                 />
-               </div>
-             </div>
-           </div>
+        <ModalComanda setModal={setIsModalGetComandaOpen} 
+        getComanda={get}
+        postCreateComanda={post} />
       )}
     </main>
   ) : (
@@ -504,7 +401,10 @@ export default function Home() {
         <div className="grid grid-cols-7 gap-4 px-2">
           <div className="col-span-2 pt-3">
             <div className="flex justify-center items-center text-6xl h-20 rounded border-2 border-black">
-              75
+            {isLoadingComanda
+              ? <Loading color="black" />
+              : listDeItensAdicionados?.id ? listDeItensAdicionados.id : '...'
+              }
             </div>
           </div>
           <div
@@ -553,12 +453,13 @@ export default function Home() {
           </div>
         </div>
       </div>
-      
       <div className="mt-10"></div>
-
       <div className="grid grid-cols-1 mt-36 pb-20 mx-2 ">
-        {listDeItensAdicionados.map((item) => (
-          <div key={item.id} className="grid grid-cols-8 border-2 backdrop-blur-sm border-l-black border-l-4 rounded-md shadow-lg mt-2">
+        {listDeItensAdicionados.records.map((item) => (
+          <div
+            key={item.id}
+            className="grid grid-cols-8 border-2 backdrop-blur-sm border-l-black border-l-4 rounded-md shadow-lg mt-2"
+          >
             <div className="flex items-center justify-center col-span-1 h-10">
               <p>{item.quant}</p>
             </div>
@@ -581,7 +482,7 @@ export default function Home() {
               </strong>
             </div>
             <div className="min-w-20 text-3xl text-white shadow-lg">
-              <strong>{currency(subTotal(listDeItensAdicionados))}</strong>
+              <strong>{currency(subTotal(listDeItensAdicionados.records))}</strong>
             </div>
           </div>
         </div>
@@ -597,9 +498,8 @@ export default function Home() {
               onClick={() => setIsModalQRCodeOpen(!isModalQRCodeOpen)}
             >
               <div className=" rounded-lg">
-              <CloseIcon />
+                <CloseIcon />
               </div>
-              
             </div>
             <div className="pl-6 pr-6 pb-6">
               <QRCode

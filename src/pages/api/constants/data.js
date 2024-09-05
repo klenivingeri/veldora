@@ -1,4 +1,6 @@
-export const itemsDaComanda =[
+export const itemsDaComanda = (id)=> ({
+  id,
+  records:[
   {
     id: '001',
     name: "Pastel de carne",
@@ -162,3 +164,60 @@ export const itemsDaComanda =[
     quant: 1
   },
 ]
+})
+
+export const comandaVazia = (id)=> ({
+  id,
+  records: []
+})
+
+export const allComandas =[
+  {
+    label: "01",
+    active: true
+  },
+  {
+    label: "02",
+    active: false
+  },
+  {
+    label: "03",
+    active: true
+  },
+  {
+    label: "04",
+    active: true
+  },
+  {
+    label: "05",
+    active: true
+  },
+  {
+    label: "06",
+    active: true
+  },
+  {
+    label: "07",
+    active: true
+  },
+  {
+    label: "08",
+    active: false
+  },
+  {
+    label: "09",
+    active: true
+  },
+  {
+    label: "10",
+    active: false
+  },
+  {
+    label: "11",
+    active: false
+  },
+  {
+    label: "12",
+    active: false
+  },
+];
