@@ -173,51 +173,39 @@ export const comandaVazia = (id)=> ({
 
 export const allComandas =[
   {
-    label: "01",
-    active: true
+    label: "1",
   },
   {
-    label: "02",
-    active: false
+    label: "2",
   },
   {
-    label: "03",
-    active: true
+    label: "3",
   },
   {
-    label: "04",
-    active: true
+    label: "4",
   },
   {
-    label: "05",
-    active: true
+    label: "5",
   },
   {
-    label: "06",
-    active: true
+    label: "6",
   },
   {
-    label: "07",
-    active: true
+    label: "7",
   },
   {
-    label: "08",
-    active: false
+    label: "8",
   },
   {
-    label: "09",
-    active: true
+    label: "9",
   },
   {
     label: "10",
-    active: false
   },
   {
     label: "11",
-    active: false
   },
   {
     label: "12",
-    active: false
   },
 ];

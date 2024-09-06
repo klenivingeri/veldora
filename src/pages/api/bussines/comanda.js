@@ -14,8 +14,10 @@ export default class Comanda {
   }
 
   async getAllComandas() {
-    console.log('chamei arquivo all')
+    const maxComanda = Array.from({ length: 30 }, (_, i) => ({label: `${i + 1}`}))
+    const labelsID = allComandas.map(c => c.label)
+    const off = maxComanda.filter(c => !labelsID.includes(c.label))
 
-    return allComandas
+    return {on:allComandas , off}
   }
 }

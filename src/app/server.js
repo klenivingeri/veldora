@@ -64,7 +64,7 @@ export const getAllComandas = async (params) => {
     const response = await fetch(`${host}/api/comanda/all`);
 
     const resp = await response.json();
-    console.log(resp)
+
     return  resp
     
   } catch (error) {

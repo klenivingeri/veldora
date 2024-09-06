@@ -83,9 +83,7 @@ const handleAdicionaItem = async (
   setQuantidade(0);
 
   setListItens((prevList) => {
-    return {...prevList,
-      records :[...prevList.records, obj]
-    };
+    return { ...prevList, records: [...prevList.records, obj] };
   });
   setLastClickTime(currentTime);
 };
@@ -97,7 +95,9 @@ export default function Home() {
   const [inputDetails, setInputDetails] = useState("");
   const [quantidade, setQuantidade] = useState(0);
   const [exibirListaCompleta, setExibirListaCompleta] = useState(false);
-  const [listDeItensAdicionados, setListDeItensAdicionados] = useState({records:[]});
+  const [listDeItensAdicionados, setListDeItensAdicionados] = useState({
+    records: [],
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalGetComandaOpen, setIsModalGetComandaOpen] = useState(false);
   const [isModalQRCodeOpen, setIsModalQRCodeOpen] = useState(false);
@@ -106,6 +106,12 @@ export default function Home() {
   const [description, setDescription] = useState(false);
   const [isTextKeyboard, setTextKeyboard] = useState(false);
   const [text, setText] = useState("");
+  const [hideKeyboard, setHideKeyboard] = useState(false);
+
+
+  const handleScroll = (event) => {
+    setHideKeyboard(true)
+  };
 
   const textFieldRef = useRef(null);
   const handleKeyboard = () => {
@@ -117,30 +123,31 @@ export default function Home() {
   };
 
   const get = (params) => {
-    setIsLoadingComanda(true)
-    getComanda(params).then((response) => {
-      setListDeItensAdicionados(response);
-    }).finally(() => {
-      setIsLoadingComanda(false)
-    });
-  }
-  
+    setIsLoadingComanda(true);
+    getComanda(params)
+      .then((response) => {
+        setListDeItensAdicionados(response);
+      })
+      .finally(() => {
+        setIsLoadingComanda(false);
+      });
+  };
+
   const post = (params) => {
-    setIsLoadingComanda(true)
-    postComanda(params).then((response) => {
-      setListDeItensAdicionados(response);
-    }).finally(() => {
-      setIsLoadingComanda(false)
-    });
-  }
+    setIsLoadingComanda(true);
+    postComanda(params)
+      .then((response) => {
+        setListDeItensAdicionados(response);
+      })
+      .finally(() => {
+        setIsLoadingComanda(false);
+      });
+  };
 
   useEffect(() => {
     getListItems().then((response) => {
       setListaSelecaoItems(response);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    })
+    });
   }, []);
 
   return !exibirListaCompleta ? (
@@ -151,28 +158,31 @@ export default function Home() {
             className="col-span-2"
             onClick={() => setIsModalGetComandaOpen(!isModalGetComandaOpen)}
           >
-            <p className="text-xs">Comanda</p>
-            <div className="flex justify-center items-center text-5xl h-15 min-h-[50px] border-black border-solid rounded border-2 shadow-lg">
-              {isLoadingComanda
-              ? <Loading color="black" />
-              : listDeItensAdicionados?.id ? listDeItensAdicionados.id : '...'
-              }
+            <p className="text-xs"><strong>Comanda</strong></p>
+            <div className="flex justify-center items-center text-5xl h-15 min-h-[65px] border-black border-solid rounded border-2 shadow-lg">
+              {isLoadingComanda ? (
+                <Loading color="black" />
+              ) : listDeItensAdicionados?.id ? (
+                listDeItensAdicionados.id
+              ) : (
+                "..."
+              )}
             </div>
           </div>
           <div
             className="col-span-5"
             onClick={() => setExibirListaCompleta(true)}
           >
-            <p className="text-xs">Ultimos itens adicionados</p>
-            <div className="flex h-15 border-solid rounded border-2 min-h-[50px] bg-slate-950 border-black shadow-lg ">
+            <p className="text-xs"><strong>Ultimos itens adicionados</strong></p>
+            <div className="flex h-15 border-solid rounded border-2 min-h-[65px] bg-slate-950 border-black shadow-lg ">
               <div className="flex w-full flex-col pl-2 justify-end ">
-                {listDeItensAdicionados.records.length && !isLoadingComanda ?  (
+                {listDeItensAdicionados.records?.length && !isLoadingComanda ? (
                   listDeItensAdicionados.records.slice(-3).map((item) => (
                     <strong>
                       {" "}
                       <p
                         key={item.id}
-                        className="w-full text-xs truncate text-white "
+                        className="w-full text-sm truncate text-white"
                       >
                         {serializaItem(item)}
                       </p>
@@ -189,7 +199,6 @@ export default function Home() {
           <div className="w-full">
             <Autocomplete
               value={value ? value : text}
-              freeSolo
               onChange={(event, newValue) => {
                 if (newValue == null) {
                   setQuantidade(0);
@@ -206,6 +215,10 @@ export default function Home() {
               options={listaSelecaoItems}
               size="small"
               disableClearable
+              ListboxProps={{
+                onScroll: handleScroll
+              }}
+              noOptionsText="Nenhuma opção encontrada"
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -224,19 +237,10 @@ export default function Home() {
                     autoCorrect: "off",
                     autoCapitalize: "off",
                     spellCheck: "false",
+                    readOnly: hideKeyboard
                   }}
-                  onChange={(event) => {
-                    if (event.target.value == null) {
-                      setQuantidade(0);
-                      setText("");
-                    } else {
-                      setQuantidade(1);
-                    }
-                    setText(event.target.value);
-                    setValue(event.target.value);
-                    setInputDetails("");
-                    setDescription(false);
-                  }}
+                  onClick={() => setHideKeyboard(false)}
+              
                 />
               )}
             />
@@ -376,9 +380,11 @@ export default function Home() {
         </div>
       )}
       {isModalGetComandaOpen && (
-        <ModalComanda setModal={setIsModalGetComandaOpen} 
-        getComanda={get}
-        postCreateComanda={post} />
+        <ModalComanda
+          setModal={setIsModalGetComandaOpen}
+          getComanda={get}
+          postCreateComanda={post}
+        />
       )}
     </main>
   ) : (
@@ -401,10 +407,13 @@ export default function Home() {
         <div className="grid grid-cols-7 gap-4 px-2">
           <div className="col-span-2 pt-3">
             <div className="flex justify-center items-center text-6xl h-20 rounded border-2 border-black">
-            {isLoadingComanda
-              ? <Loading color="black" />
-              : listDeItensAdicionados?.id ? listDeItensAdicionados.id : '...'
-              }
+              {isLoadingComanda ? (
+                <Loading color="black" />
+              ) : listDeItensAdicionados?.id ? (
+                listDeItensAdicionados.id
+              ) : (
+                "..."
+              )}
             </div>
           </div>
           <div
@@ -482,7 +491,9 @@ export default function Home() {
               </strong>
             </div>
             <div className="min-w-20 text-3xl text-white shadow-lg">
-              <strong>{currency(subTotal(listDeItensAdicionados.records))}</strong>
+              <strong>
+                {currency(subTotal(listDeItensAdicionados.records))}
+              </strong>
             </div>
           </div>
         </div>
