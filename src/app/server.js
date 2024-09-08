@@ -26,7 +26,7 @@ export const getListItems = async (data) => {
   }
 }
 
-export const getComanda = async (params) => {
+export const getComanda = async (params = 0) => {
   try {
     const response = await fetch(`${host}/api/comanda/${params}`);
 

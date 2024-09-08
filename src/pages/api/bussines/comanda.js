@@ -9,7 +9,6 @@ export default class Comanda {
   }
 
   async postComanda(id) {
-    console.log('aaa',id)
     return comandaVazia(id)
   }
 

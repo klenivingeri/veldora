@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from 'react';
 import QRCode from "react-qr-code";
 import { currency, subTotal } from "../utils/currency";
 import { useEffect, useState, useRef } from "react";
@@ -16,6 +17,7 @@ import { Quantidade } from "../components/organismo/Quantidade";
 import { Loading } from "../components/Loading";
 import { ModalComanda } from "../components/ModalComanda";
 import { testServer, getListItems, getComanda, postComanda } from "../server";
+import Link from "next/link";
 
 const toggleFullScreen = () => {
   if (!document.fullscreenElement) {
@@ -88,7 +90,9 @@ const handleAdicionaItem = async (
   setLastClickTime(currentTime);
 };
 
-export default function Home() {
+export default function Home({searchParams}) {
+  const getComandaParams = searchParams.getComanda;
+  const postComandaParams = searchParams.postComanda;
   const [listaSelecaoItems, setListaSelecaoItems] = useState([]);
   const [lastClickTime, setLastClickTime] = useState(null);
   const [value, setValue] = useState("");
@@ -145,6 +149,12 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if(getComandaParams){
+      get(getComandaParams)
+    }
+   if(postComandaParams){
+    post(postComandaParams)
+   }
     getListItems().then((response) => {
       setListaSelecaoItems(response);
     });
@@ -156,18 +166,19 @@ export default function Home() {
         <div className="grid grid-cols-7 gap-4 border border-gray-300 p-2 rounded">
           <div
             className="col-span-2"
-            onClick={() => setIsModalGetComandaOpen(!isModalGetComandaOpen)}
           >
             <p className="text-xs"><strong>Comanda</strong></p>
-            <div className="flex justify-center items-center text-5xl h-15 min-h-[65px] border-black border-solid rounded border-2 shadow-lg">
+            <Link 
+            href="/selecao-de-comanda"
+            className="flex justify-center items-center text-5xl h-15 min-h-[65px] border-black border-solid rounded border-2 shadow-lg">
               {isLoadingComanda ? (
                 <Loading color="black" />
               ) : listDeItensAdicionados?.id ? (
-                listDeItensAdicionados.id
+                listDeItensAdicionados.id ? listDeItensAdicionados.id : "..."
               ) : (
                 "..."
               )}
-            </div>
+            </Link>
           </div>
           <div
             className="col-span-5"
@@ -524,5 +535,5 @@ export default function Home() {
         </div>
       )}
     </main>
-  );
+  )
 }

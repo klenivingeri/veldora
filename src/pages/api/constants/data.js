@@ -176,36 +176,96 @@ export const allComandas =[
     label: "1",
   },
   {
-    label: "2",
+    label: "3",
   },
   {
-    label: "3",
+    label: "13",
   },
   {
     label: "4",
   },
   {
-    label: "5",
+    label: "15",
   },
   {
     label: "6",
   },
   {
-    label: "7",
+    label: "27",
   },
   {
     label: "8",
   },
   {
-    label: "9",
+    label: "19",
   },
   {
     label: "10",
   },
   {
-    label: "11",
+    label: "14",
   },
   {
     label: "12",
   },
+  {
+    label: "5",
+  },
+  {
+    label: "13",
+  },
+  {
+    label: "23",
+  },
+  {
+    label: "28",
+  },
+  {
+    label: "1",
+  },
+  {
+    label: "3",
+  },
+  {
+    label: "13",
+  },
+  {
+    label: "4",
+  },
+  {
+    label: "15",
+  },
+  {
+    label: "6",
+  },
+  {
+    label: "27",
+  },
+  {
+    label: "8",
+  },
+  {
+    label: "19",
+  },
+  {
+    label: "10",
+  },
+  {
+    label: "14",
+  },
+  {
+    label: "12",
+  },
+  {
+    label: "5",
+  },
+  {
+    label: "13",
+  },
+  {
+    label: "23",
+  },
+  {
+    label: "28",
+  }
 ];
