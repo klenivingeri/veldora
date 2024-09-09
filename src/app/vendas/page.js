@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense } from 'react';
 import QRCode from "react-qr-code";
 import { currency, subTotal } from "../utils/currency";
 import { useEffect, useState, useRef } from "react";
