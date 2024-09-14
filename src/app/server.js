@@ -15,18 +15,36 @@ export const testServer = async (data) => {
 export const getListItems = async (data) => {
   try {
     const response = await fetch(`${host}/api/items`);
+    console.log(response)
+    const resp = await response.json();
+
+    return  resp
+    
+  } catch (error) {
+    console.error({
+      error: true,
+      message: 'Erro ao buscar itens',
+      statusCode: error
+    });
+    return []
+  }
+}
+
+export const getOrder = async (params = 0) => {
+  try {
+    const response = await fetch(`${host}/api/comanda/${params}`);
 
     const resp = await response.json();
 
     return  resp
     
   } catch (error) {
-    console.error('Erro ao buscar itens:', error);
+    console.error('Erro ao buscar Comanda:', error);
     return []
   }
 }
 
-export const getComanda = async (params = 0) => {
+export const getComanda = async (params = 0) => { //remover
   try {
     const response = await fetch(`${host}/api/comanda/${params}`);
 

@@ -8,11 +8,15 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const response = await items.getItems();
+      console.log(response)
       //await wait()
 
       res.status(200).json(response);
     } catch (err) {
-      res.status(500).json({ error: 'failed to load items data' });
+      res.status(500).json({
+        error: true,
+        message: 'failed to load items data'
+      });
     }
   } else {
     // Lida com outros métodos HTTP

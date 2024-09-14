@@ -12,7 +12,10 @@ export const total = (items) => {
   return totalPrice;
 };
 
-export const subTotal = (items) => {
-  const totalPrice = items.reduce((acc, current) => acc + current.price * current.quant, 0);
-  return totalPrice;
+export const subTotal = (items = [], orderItems= []) => {
+  const totalPriceItems = items.reduce((acc, current) => acc + current.price * current.quant, 0);
+
+  const totalPriceOrderItems = orderItems.reduce((acc, current) => acc + current.price * current.quant, 0);
+  
+  return totalPriceOrderItems + totalPriceItems;
 };

@@ -97,13 +97,15 @@ export const Acordion = ({
             <Typography>
               <strong>{i.label}</strong>
             </Typography>
-            <div>
+            <div className="relative">
+              
               {itemsSelecionados[i.id]
-                ? Object.values(itemsSelecionados[i.id]).reduce(
+                ? <div className="absolute flex justify-center rounded-full border-2 bg-black text-white w-[31px] h-[31px] right-[0px] pt-[1px]"><strong>
+                  {Object.values(itemsSelecionados[i.id]).reduce(
                     (total, item) => total + item.quant,
                     0
-                  )
-                : 0}
+                  )}</strong></div>
+                : ""}
             </div>
           </div>
         </AccordionSummary>

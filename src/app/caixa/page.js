@@ -49,6 +49,7 @@ export default function Home() {
     });
   };
 
+  console.log(comanda)
   return (
     <main className="flex min-h-screen flex-col justify-center px-40">
       <div className="grid grid-cols-12 min-w-[1150px]">

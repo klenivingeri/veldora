@@ -418,6 +418,7 @@ export default class Items {
   async getItems() {
     const groupedItems = itemsmock.reduce((acc, item) => {
       // Verifica se o tipo já foi adicionado ao acumulador
+      
       let category = acc.find(group => group.id === item.type);
       
       if (!category) {
