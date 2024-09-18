@@ -5,8 +5,9 @@ import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { Quantidade2 } from "../organismo/Quantidade2";
-import { forEach, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 import { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -44,23 +45,46 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-const Items = ({ item, handleTotal, itemSelecionado }) => (
-  <div
-    key={item.id}
-    className="flex m-1 content-center bg-white items-center justify-between p-1 border-2 backdrop-blur-sm border-white border-l-black border-l-4 rounded-md shadow-lg"
-  >
-    <div className="pl-2 truncate">
-      <strong>{item.label}</strong>
+const Items = ({ item, handleTotal, itemSelecionado, setInfoModal, setModelOpen }) => {
+  const handleModal = () => {
+    setInfoModal(item)
+    setModelOpen(true)
+  }
+  return (
+    <div
+      key={item.id}
+      className="flex m-1 content-center bg-white items-center justify-between p-1 border-2 backdrop-blur-sm border-white border-l-black border-l-4 rounded-md shadow-lg"
+    >
+      <div className="pl-2 truncate w-full" onClick={() => handleModal(true)}>
+        <strong>{item.label}</strong>
+      </div>
+      <div className="">
+        <Quantidade2
+          item={item}
+          handleTotal={handleTotal}
+          itemSelecionado={itemSelecionado}
+        />
+      </div>
     </div>
-    <div className="">
-      <Quantidade2
-        item={item}
-        handleTotal={handleTotal}
-        itemSelecionado={itemSelecionado}
-      />
+  );
+};
+
+const NumTotalDeItems = ({ itemsSelecionados }) => {
+  console.log(itemsSelecionados);
+  const numTotal = Object.values(itemsSelecionados).reduce(
+    (total, item) => total + item.quant,
+    0
+  );
+
+  return itemsSelecionados && numTotal ? (
+    <div className="absolute flex justify-center rounded-full border-2 bg-black text-white w-[31px] h-[31px] right-[0px] pt-[1px]">
+      <strong>{numTotal}</strong>
     </div>
-  </div>
-);
+  ) : (
+    ""
+  );
+};
+
 export const Acordion = ({
   i,
   handleChange,
@@ -69,8 +93,9 @@ export const Acordion = ({
   itemsSelecionados = {},
   search,
   showItemsSelecionados,
+  setInfoModal,
+  setModelOpen,
 }) => {
-  const [count, setCount] = useState(0)
   const handleTotal = (item) => {
     const result = { ...itemsSelecionados[i.id], ...item };
     handleItemsSelecionados({ [i.id]: result });
@@ -80,13 +105,14 @@ export const Acordion = ({
     return i.items
       .filter((item) => itemsSelecionados[i.id]?.[item.id]?.quant > 0)
       .map((item) => {
-        return <Items
-          item={item}
-          handleTotal={handleTotal}
-          itemSelecionado={itemsSelecionados[i.id]?.[item.id]}
-        />
-      }
-    );
+        return (
+          <Items
+            item={item}
+            handleTotal={handleTotal}
+            itemSelecionado={itemsSelecionados[i.id]?.[item.id]}
+          />
+        );
+      });
   }
 
   if (isEmpty(search)) {
@@ -98,20 +124,17 @@ export const Acordion = ({
               <strong>{i.label}</strong>
             </Typography>
             <div className="relative">
-              
-              {itemsSelecionados[i.id]
-                ? <div className="absolute flex justify-center rounded-full border-2 bg-black text-white w-[31px] h-[31px] right-[0px] pt-[1px]"><strong>
-                  {Object.values(itemsSelecionados[i.id]).reduce(
-                    (total, item) => total + item.quant,
-                    0
-                  )}</strong></div>
-                : ""}
+              {itemsSelecionados[i.id] && (
+                <NumTotalDeItems itemsSelecionados={itemsSelecionados[i.id]} />
+              )}
             </div>
           </div>
         </AccordionSummary>
         <AccordionDetails sx={{ padding: "0px" }}>
           {i.items.map((item) => (
             <Items
+              setInfoModal={setInfoModal}
+              setModelOpen={setModelOpen}
               item={item}
               handleTotal={handleTotal}
               itemSelecionado={itemsSelecionados[i.id]?.[item.id]}
@@ -126,10 +149,11 @@ export const Acordion = ({
     .filter((item) => item.label.toLowerCase().includes(search.toLowerCase()))
     .map((item) => (
       <Items
+        setInfoModal={setInfoModal}
+        setModelOpen={setModelOpen}
         item={item}
         handleTotal={handleTotal}
         itemSelecionado={itemsSelecionados[i.id]?.[item.id]}
       />
-    )
-  );
+    ));
 };

@@ -40,6 +40,8 @@ export default function Comanda({ searchParams }) {
   const [order, setOrder] = useState({ records: [] });
   const textFieldRef = useRef(null);
 
+  const [modelOpen, setModelOpen] = useState(false);
+  const [infoModal, setInfoModal] = useState({});
   const handleKeyboard = () => {
     setTextKeyboard(!isTextKeyboard);
 
@@ -262,11 +264,34 @@ export default function Comanda({ searchParams }) {
                 itemsSelecionados={itemsSelecionados}
                 search={search}
                 showItemsSelecionados={showItemsSelecionados}
+                setInfoModal={setInfoModal}
+                setModelOpen={setModelOpen}
               />
             ))}
           </div>
         )}
       </div>
+      {modelOpen && <div
+          id="modal"
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-1">
+            {infoModal.label}
+            </h2>
+            <div className="border-2 p-2 rounded-md border-slate-300 mb-4">
+            <p className="">Esse modal tem o intuido de informar a descrição do item</p>
+            </div>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setModelOpen(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>}
     </div>
   ) : (
     <div className="flex flex-col h-screen">

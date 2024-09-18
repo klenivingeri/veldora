@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 export const CantosTopBot = ({ size = 10 }) => {
-  const bsize = 2 * size;
   return (
     <>
       <div
@@ -20,7 +19,6 @@ export const CantosTopBot = ({ size = 10 }) => {
 };
 
 export const CantosTop = ({ size = 10 }) => {
-  const bsize = 2 * size;
   return (
     <>
           <>
@@ -42,7 +40,6 @@ export const CantosTop = ({ size = 10 }) => {
 
 
 export const CantosBotTop = ({ size = 10, }) => {
-  const bsize = 2 * size;
   return (
     <>
     <div
@@ -61,7 +58,6 @@ export const CantosBotTop = ({ size = 10, }) => {
 };
 
 export const CantosBot = ({ size = 10  }) => {
-  const bsize = 2 * size;
   return (
     <>
     <div
