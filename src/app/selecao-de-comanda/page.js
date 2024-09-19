@@ -189,7 +189,7 @@ export default function SelecaoDeComanda({}) {
                 Cancelar
               </button>
               <Link
-                href={`/vendas2?postComanda=${numComandaOff}`}
+                href={`/vendas?createorderid=${numComandaOff}`}
                 className="px-4 py-2 bg-slate-950 border-inherit shadow-lg text-white rounded"
               >
                 Confirmar

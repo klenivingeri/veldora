@@ -107,6 +107,8 @@ export const Acordion = ({
       .map((item) => {
         return (
           <Items
+            setInfoModal={setInfoModal}
+            setModelOpen={setModelOpen}
             item={item}
             handleTotal={handleTotal}
             itemSelecionado={itemsSelecionados[i.id]?.[item.id]}

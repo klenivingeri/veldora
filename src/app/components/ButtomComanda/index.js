@@ -21,7 +21,7 @@ export const ButtonComanda = ({comanda, setModalComanda}) => {
     >
       <div className="absolute top-[10px] left-[10px] h-[10px] w-[10px] bg-green-500 rounded-full"></div>
       <div className="flex justify-center h-full content-center items-center">
-        <Link href={`/vendas2?orderid=${comanda.label}`} className="text-xl">
+        <Link href={`/vendas?orderid=${comanda.label}`} className="text-xl">
           <strong>{comanda.label}</strong>
         </Link>
       </div>
