@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { CantosBot } from "../components/Cantos";
+import { MenuInferior } from "../components/MenuInferior";
 
 import { Loading } from "../components/Loading";
 import { getAllComandas } from "../server";
@@ -128,7 +130,21 @@ export default function SelecaoDeComanda({}) {
           </div>
         </div>
 
-        <div id="MID" className="flex-grow pt-[175px] pb-[100px]">
+        <div
+        id="Bot-Flutuante"
+        className="fixed  inset-x-0 bottom-0 w-full h-[60px]  z-50 "
+      >
+        <div className="w-full px-[20px] pb-[8px]">
+        </div>
+          <div className="relative">
+          <CantosBot />
+          </div>
+        <div className="bg-black h-full">
+          <MenuInferior page='Seleção' />
+        </div>
+      </div>
+
+        <div id="MID" className="flex-grow pt-[175px] pb-[60px] bg-slate-100">
           {isLoading ? (
             <div className="flex-grow  h-full flex justify-center items-center ">
               <Loading color="black" />

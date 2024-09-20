@@ -18,6 +18,7 @@ import { CantosTopBot, CantosBotTop, CantosTop, CantosBot } from "../components/
 import { getListItems, getOrder, postComanda } from "../server";
 import { DivFocus } from "../components/organismo/Focus";
 import Link from "next/link";
+import { MenuInferior } from "../components/MenuInferior";
 
 export default function Comanda({ searchParams }) {
   const orderID = searchParams.orderid;
@@ -250,13 +251,13 @@ export default function Comanda({ searchParams }) {
           <CantosBot />
           </div>
         <div className="bg-black h-full">
-          menu
+          <MenuInferior page='Comanda' />
         </div>
       </div>
 
       <div className="flex-grow pt-[140px] pb-[105px]">
         {isLoadinglistaSelecaoItems ? (
-          <div className="flex-grow  h-full flex justify-center items-center ">
+          <div className="flex-grow   h-full flex justify-center items-center ">
             <Loading color="black" />
           </div>
         ) : (
