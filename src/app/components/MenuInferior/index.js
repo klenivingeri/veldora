@@ -26,7 +26,7 @@ const ButtonDiv = ({ title, icon, url, active }) => {
         onTouchEnd={handleTouchEnd}
       >
         <Link href={url}
-        className=" w-full ">
+        className="w-full">
           <div
             className={`flex flex-col justify-center items-center ${
               active ? "text-black" : "text-white"
