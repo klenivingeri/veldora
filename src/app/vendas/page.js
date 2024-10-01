@@ -148,9 +148,9 @@ export default function Comanda({ searchParams }) {
             <div className="text-xs text-white">
               <strong>Informações</strong>
             </div>
-            <div className="flex h-16 border-solid rounded border-2 bg-gray-300">
-              <div className="flex w-full flex-col p-1 justify-start">
-                <div className="text-xs">Aberta: 10:20</div>
+            <div className="flex h-16 border-solid rounded border-2 bg-black">
+              <div className="flex w-full flex-col p-2 justify-start text-white">
+                <div className="text-xs">Aberta as: 10:20</div>
                 <div className="text-xs">Atualização: 01:30</div>
               </div>
             </div>
@@ -234,10 +234,10 @@ export default function Comanda({ searchParams }) {
         id="Bot-Flutuante"
         className="fixed inset-x-0 bottom-0 w-full h-[100px]  z-50"
       >
-        <div className="w-full px-[20px] pb-[8px]">
+        <div className="w-full px-[8px] pb-[8px]">
         <button
           onClick={handleListDeItensAdicionados}
-          className={`px-4 flex py-2 items-center justify-center w-full border-inherit shadow-lg text-white rounded ${
+          className={`px-2 flex py-2 items-center justify-center w-full border-inherit shadow-lg text-white rounded ${
             !numTotalItems
               ? "bg-gray-300 cursor-not-allowed "
               : "bg-slate-950 border-inherit shadow-lg"
@@ -328,8 +328,8 @@ export default function Comanda({ searchParams }) {
             <div className="text-white text-xs">
               <strong>Informações</strong>
             </div>
-            <div className="flex h-16 border-solid rounded border-2 bg-gray-300">
-              <div className="flex w-full flex-col p-1 justify-start">
+            <div className="flex h-16 border-solid rounded border-2 bg-black">
+              <div className="flex w-full flex-col p-2 justify-start text-white">
                 <div className="text-xs">Aberta: 10:20</div>
                 <div className="text-xs">Atualização: 01:30</div>
               </div>
@@ -423,7 +423,7 @@ export default function Comanda({ searchParams }) {
                 .map((item) => (
                   <div
                     key={item.id}
-                    className="grid grid-cols-8 border-2 backdrop-blur-sm border-l-blue-500 border-l-4 rounded-md shadow-lg mt-1"
+                    className="grid grid-cols-8 border-2 backdrop-blur-sm border-l-green-500 border-l-4 rounded-md shadow-lg mt-1"
                   >
                     <div className="flex items-center justify-center col-span-1 h-10">
                       <p>{item.quant}</p>

@@ -6,8 +6,6 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import { Quantidade2 } from "../organismo/Quantidade2";
 import { isEmpty } from "lodash";
-import { useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
