@@ -15,10 +15,11 @@ import TextField from "@mui/material/TextField";
 import KeyboardIcon from "@mui/icons-material/Keyboard";
 import PinIcon from "@mui/icons-material/Pin";
 import { CantosTopBot, CantosBotTop, CantosTop, CantosBot } from "../components/Cantos";
-import { getListItems, getOrder, postComanda } from "../server";
+import { getListItems, getOrder, postComanda, verifyToken } from "../server";
 import { DivFocus } from "../components/organismo/Focus";
 import Link from "next/link";
 import { MenuInferior } from "../components/MenuInferior";
+import { getCookie } from "../utils/cookie";
 
 export default function Comanda({ searchParams }) {
   const orderID = searchParams.orderid;
@@ -100,6 +101,8 @@ export default function Comanda({ searchParams }) {
   };
 
   useEffect(() => {
+    const cookie = getCookie('ml2')
+    verifyToken(cookie)
     if(orderID || createOrderID){
       if (orderID) {
         get(orderID);
